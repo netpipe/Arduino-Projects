@@ -1,6 +1,8 @@
-#include <PortExpander_I2C-swire.h>
-#include <Adafruit_SSD1306-swire.h>
+#include <PortExpander_I2C-swire.h> //https://github.com/tecan/PortExpander_I2C-SWire-Arduino
+#include <Adafruit_SSD1306-swire.h> //https://github.com/tecan/Adafruit_SSD1306-SWire-Arduino
 #include <Adafruit_GFX.h>
+
+
 
 // OLED display TWI address
 #define OLED_ADDR   0x3C
