@@ -5,7 +5,7 @@
 #include <Adafruit_BMP085.h> //might replace with bmp280 for temp and humidity in one
  #include <dht.h>
 
-
+// combine arduino with mercury switch incase of overheat failsafe while debugging
 // OLED display TWI address
 #define OLED_ADDR   0x3C
 
@@ -17,6 +17,7 @@ Adafruit_SSD1306 display(-1);
 
 PortExpander_I2C pe(0x20,4,5);
 int ledPin = 7; // This is the eighth expansion port
+
 
 
 dht DHT;
@@ -50,20 +51,29 @@ void setup() {
   pe.init();
   Serial.begin(9600);
 
-    
+  for( int i = 0; i < 8; i++ ){
+    pe.pinMode(i,INPUT);
+    pe.digitalWrite(i, HIGH);
+  }
   pe.pinMode (0, OUTPUT);    
   pe.pinMode (1, OUTPUT);
   pe.pinMode (2, INPUT);
   pe.pinMode (3, INPUT);
-  pe.pinMode (4, INPUT);
-pe.pinMode (4, INPUT);
-
-  pe.digitalWrite(0, HIGH);   // turn the LED on (HIGH is the voltage level)                    // wait for a second
-  pe.digitalWrite(1, HIGH); 
+  pe.pinMode (5, INPUT);
+  pe.pinMode (6, INPUT);
+  pe.pinMode (7, INPUT);
+ 
+  
+  pe.digitalWrite(0, HIGH);
+  pe.digitalWrite(1, LOW); 
   pe.digitalWrite(2, LOW); 
-  pe.digitalWrite(3, LOW); 
-  pe.digitalWrite(4, LOW); 
+  pe.digitalWrite(3, HIGH); 
+  pe.digitalWrite(4, HIGH); 
+  pe.digitalWrite(5, HIGH);
+  pe.digitalWrite(6, HIGH); 
+  pe.digitalWrite(7, LOW);
 
+  
   display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR,1,4,5);
   display.clearDisplay();
   display.display();
@@ -82,10 +92,14 @@ pe.pinMode (4, INPUT);
 
 
   int i=0;
+  int count=0;
+int countit=0;
+int activated=1;
+bool pin3,pin4,pin5,pin6;
 void loop() {
 
   
-
+if ( count > 180 ){
   //  if ( i == 0 ){ // update display
     display.clearDisplay();
     display.display();
@@ -102,8 +116,8 @@ void loop() {
  // pe.digitalWrite(ledPin, HIGH);   // turn the LED on (HIGH is the voltage level)
  // delay(1000);                     // wait for a second
  // pe.digitalWrite(ledPin, LOW);    // turn the LED off by making the voltage LOW
-  pe.digitalWrite(0, HIGH); 
-   pe.digitalWrite(0, HIGH);  
+//  pe.digitalWrite(0, HIGH); 
+ //  pe.digitalWrite(0, HIGH);  
   
        if (pe.digitalRead(2) == HIGH) {
           Serial.print ("optical endstop triggered");
@@ -168,8 +182,53 @@ void loop() {
   snprintf(buffer, sizeof(buffer), "%2d:%2d:%2d, ", remainingTime.hour, remainingTime.minute, remainingTime.second);
   Serial.print(buffer);
   Serial.println(remainingTime == defaultTime? "the default time." : "the stored time");
-  
     display.display();
+count=0;
+}else{
+count++;
+}
+// loop for input too to get faster timing.
+
+    if ( activated == 0 ) {
+      for( int i = 3; i < 7; i++ ){
+     // i=1;
+      if( pe.digitalRead(i) == 1 ){
+        Serial.print("activated keypad \n" );
+                activated=1;
+        }
+
+      }
+    }
+      
+  if ( activated == 1 ) {
     
-  delay(22000);                     // wait for a second
+        if (countit >= 450) {
+            activated=0;
+            countit=0;
+         }
+
+      for( int i = 3; i < 7; i++ ){
+     // i=1;
+      if( pe.digitalRead(i) == 1 ){
+        Serial.print("Pin " );
+        Serial.print(i);
+        Serial.println(" is low.");
+        }
+      }
+    if( pe.digitalRead(3) == 1 )
+      { pin3=1;}
+    if( pe.digitalRead(4) == 1 )
+      { pin4=1;}
+    if( pe.digitalRead(5) == 1 )
+      { pin5=1;}
+    if( pe.digitalRead(6) == 1 )
+      { pin6=1;}
+
+
+      countit++;
+    delay(60);  
+  }
+  else{   delay(1060); }
+  
+
 }
