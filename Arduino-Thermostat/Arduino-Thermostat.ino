@@ -2,8 +2,15 @@
 #include <Adafruit_SSD1306-swire.h>
 #include <Adafruit_GFX.h>
 #include <Wire.h>
-#include <Adafruit_BMP085.h> //might replace with bmp280 for temp and humidity in one
- #include <dht.h>
+
+#define BMP085
+#ifdef BMP085
+  #include <Adafruit_BMP085-swire.h> //might replace with bmp280 for temp and humidity in one
+  #include <dht.h>
+  Adafruit_BMP085 bmp;
+  dht DHT;
+  #define DHT11_PIN 7
+#endif
 
 // combine arduino with mercury switch incase of overheat failsafe while debugging
 // OLED display TWI address
@@ -20,11 +27,6 @@ int ledPin = 7; // This is the eighth expansion port
 
 
 
-dht DHT;
-#define DHT11_PIN 7
-
-
-Adafruit_BMP085 bmp;
 #include <EEPROM.h>
 
 struct TimeVar {
@@ -83,9 +85,18 @@ void setup() {
   display.drawPixel(127, 0, WHITE);
   display.drawPixel(0, 63, WHITE);
   display.drawPixel(127, 63, WHITE);
-
-  // update display with all of the above graphics
+    display.setCursor(27,30); //x y
+    display.print("Thermostat!");
+ 
   display.display();
+
+//BMP085_ULTRALOWPOWER
+//BMP085_STANDARD
+//BMP085_HIGHRES
+    if (!bmp.begin(BMP085_STANDARD,4,5)) {
+  Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+  while (1) {}
+  }
 
 }
 
@@ -96,6 +107,7 @@ void setup() {
 int countit=0;
 int activated=1;
 bool pin3,pin4,pin5,pin6;
+int temperature;
 void loop() {
 
   
@@ -119,19 +131,21 @@ if ( count > 180 ){
 //  pe.digitalWrite(0, HIGH); 
  //  pe.digitalWrite(0, HIGH);  
   
-       if (pe.digitalRead(2) == HIGH) {
-          Serial.print ("optical endstop triggered");
-        }
+      // if (pe.digitalRead(2) == HIGH) {
+     //     Serial.print ("optical endstop triggered");
+     //   }
 // if (pe.digitalRead(3) !=0){
  
 // }
  //}
 // loop through pages of information
+#ifdef BMP085
     display.setCursor(0,10);
     display.print("Temperature = ");
     display.print(bmp.readTemperature());
     display.print(" *C");
     //    Serial.print(bmp.readTemperature());
+
 
 
         display.setCursor(0,10);
@@ -164,7 +178,7 @@ if ( count > 180 ){
     display.print(DHT.temperature);
     display.print("Humidity = ");
     display.print(DHT.humidity);
-
+#endif
 
   
   TimeVar storedTime;
@@ -205,6 +219,7 @@ count++;
         if (countit >= 450) {
             activated=0;
             countit=0;
+            Serial.print("deactivated keypad \n" );
          }
 
       for( int i = 3; i < 7; i++ ){
@@ -216,7 +231,22 @@ count++;
         }
       }
     if( pe.digitalRead(3) == 1 )
-      { pin3=1;}
+      { pin3=1;
+          temperature+=1;
+     
+          display.clearDisplay();
+          display.display();
+          display.setTextSize(0.5);
+          display.setTextColor(WHITE);
+          
+          #ifdef BMP085
+          display.setCursor(0,10);
+          display.print("Temperature = ");
+          display.print(bmp.readTemperature());
+          display.print(" *C");
+          display.display();
+          #endif
+      }
     if( pe.digitalRead(4) == 1 )
       { pin4=1;}
     if( pe.digitalRead(5) == 1 )
