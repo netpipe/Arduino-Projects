@@ -108,6 +108,8 @@ int countit=0;
 int activated=1;
 bool pin3,pin4,pin5,pin6;
 int temperature;
+
+
 void loop() {
 
   
@@ -196,6 +198,7 @@ if ( count > 180 ){
   snprintf(buffer, sizeof(buffer), "%2d:%2d:%2d, ", remainingTime.hour, remainingTime.minute, remainingTime.second);
   Serial.print(buffer);
   Serial.println(remainingTime == defaultTime? "the default time." : "the stored time");
+  
     display.display();
 count=0;
 }else{
@@ -254,11 +257,30 @@ count++;
     if( pe.digitalRead(6) == 1 )
       { pin6=1;}
 
-
-      countit++;
-    delay(60);  
+  if(millis() -  startTime > 20000UL && !updated)
+  {
+    TimeVar newTime = {1,20,30};
+    EEPROM.put(0,newTime);
+    Serial.println("stored time updated");
+    updated = true;
   }
-  else{   delay(1060); }
+      countit++;
+    delay(60); 
+     
+  }
+  else{   delay(1060); 
+  
+    if(millis() -  startTime > 20000UL && !updated)
+  {
+    TimeVar newTime = {1,20,30};
+    EEPROM.put(0,newTime);
+    Serial.println("stored time updated");
+    updated = true;
+  }
+  
+  }
   
 
+
+  
 }
