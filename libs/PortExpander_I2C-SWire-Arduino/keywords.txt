@@ -1,0 +1,28 @@
+###########################################
+# Syntax Coloring Map For PortExpander_I2C
+###########################################
+
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
+PortExpander_I2C	KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+init	KEYWORD2
+pinMode	KEYWORD2
+digitalWrite	KEYWORD2
+digitalWriteAll	KEYWORD2
+digitalToggle	KEYWORD2
+digitalRead	KEYWORD2
+digitalReadAll	KEYWORD2
+
+i2cWrite	KEYWORD2
+init_priv	KEYWORD2
+
+
+###########################################
+# Constants (LITERAL1)
+###########################################
