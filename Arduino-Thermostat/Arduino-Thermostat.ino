@@ -233,7 +233,7 @@ count++;
         Serial.println(" is low.");
         }
       }
-    if( pe.digitalRead(3) == 1 )
+    if( pe.digitalRead(3) == 1 ) //pad 1 pin 3 temp up
       { pin3=1;
           temperature+=1;
      
@@ -251,12 +251,31 @@ count++;
           #endif
       }
     if( pe.digitalRead(4) == 1 )
-      { pin4=1;}
+      { pin4=1;
+      
+      }
     if( pe.digitalRead(5) == 1 )
-      { pin5=1;}
-    if( pe.digitalRead(6) == 1 )
-      { pin6=1;}
-
+      { pin5=1;
+      
+      }
+    if( pe.digitalRead(6) == 1 )//pad 4 pin 6 temp down
+      { pin6=1;
+                temperature-=1;
+     
+          display.clearDisplay();
+          display.display();
+          display.setTextSize(0.5);
+          display.setTextColor(WHITE);
+          
+          #ifdef BMP085
+          display.setCursor(0,10);
+          display.print("Temperature = ");
+          display.print(bmp.readTemperature());
+          display.print(" *C");
+          display.display();
+          #endif
+      }
+   //active loop update eeprom
   if(millis() -  startTime > 20000UL && !updated)
   {
     TimeVar newTime = {1,20,30};
@@ -268,15 +287,15 @@ count++;
     delay(60); 
      
   }
-  else{   delay(1060); 
-  
+  else{   delay(1060); //sleep loop update eeprom
+    
     if(millis() -  startTime > 20000UL && !updated)
-  {
-    TimeVar newTime = {1,20,30};
-    EEPROM.put(0,newTime);
-    Serial.println("stored time updated");
-    updated = true;
-  }
+    {
+      TimeVar newTime = {1,20,30};
+      EEPROM.put(0,newTime);
+      Serial.println("stored time updated");
+      updated = true;
+    }
   
   }
   
