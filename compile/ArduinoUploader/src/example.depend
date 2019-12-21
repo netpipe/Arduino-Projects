@@ -1,0 +1,278 @@
+# depslib dependency file v1.0
+1576915372 source:/home/netpipe/Desktop/ArduinoUploader/src/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<sstream>
+	<string>
+	<bits/stdc++.h>
+	<iostream>
+	<sys/stat.h>
+	<sys/types.h>
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/src/syspil.h
+	<windows.h>
+	<io.h>
+	<stdlib.h>
+	<unistd.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<sys/time.h>
+	<signal.h>
+	<sys/types.h>
+	<sys/wait.h>
+	<sys/select.h>
+	<pthread.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/src/processpil.h
+
+1576915145 /home/netpipe/Desktop/ArduinoUploader/src/sketchbuild.h
+	<iostream>
+	<sstream>
+	<string>
+	<vector>
+	<memory.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/src/processpil.c
+	<windows.h>
+	<io.h>
+	<unistd.h>
+	<sys/time.h>
+	<signal.h>
+	<sys/types.h>
+	<sys/wait.h>
+	<sys/select.h>
+	<stdio.h>
+	<fcntl.h>
+	<stdlib.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	"processpil.h"
+
+1576915448 source:/home/netpipe/Desktop/ArduinoUploader/src/sketchbuild.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<fcntl.h>
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/src/syspil.c
+	<stdio.h>
+	<time.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<ctype.h>
+	<fcntl.h>
+	"syspil.h"
+	<sys/types.h>
+	<sys/time.h>
+	<dirent.h>
+	<unistd.h>
+
+1576915535 source:/home/netpipe/Desktop/ArduinoUploader/src/uploader.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<sstream>
+	<string>
+	"ctb-0.16/ctb.h"
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/ctb.h
+	"ctb-0.16/fifo.h"
+	"ctb-0.16/gpib.h"
+	"ctb-0.16/getopt.h"
+	"ctb-0.16/iobase.h"
+	"ctb-0.16/kbhit.h"
+	"ctb-0.16/portscan.h"
+	"ctb-0.16/serport.h"
+	"ctb-0.16/serportx.h"
+	"ctb-0.16/timer.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/fifo.h
+	<sys/types.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/gpib.h
+	"ctb-0.16/iobase.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/iobase.h
+	"ctb-0.16/fifo.h"
+	<sys/types.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/getopt.h
+	"win32/getopt.h"
+	<getopt.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/win32/getopt.h
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/kbhit.h
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/portscan.h
+	<string>
+	<vector>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/serport.h
+	"ctb-0.16/win32/serport.h"
+	"ctb-0.16/linux/serport.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/win32/serport.h
+	"../serportx.h"
+	<windows.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/serportx.h
+	<stdio.h>
+	<string.h>
+	"ctb-0.16/iobase.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/linux/serport.h
+	"ctb-0.16/serportx.h"
+	<linux/serial.h>
+	<termios.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/timer.h
+	"win32/timer.h"
+	"linux/timer.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/win32/timer.h
+	<windows.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/include/ctb-0.16/linux/timer.h
+	<pthread.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/fifo.cpp
+	"ctb-0.16/fifo.h"
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/iobase.cpp
+	<stdio.h>
+	<string.h>
+	"ctb-0.16/iobase.h"
+	"ctb-0.16/timer.h"
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/kbhit.cpp
+	<conio.h>
+	<stdio.h>
+	<termios.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/linux/serport.cpp
+	"ctb-0.16/linux/serport.h"
+	<errno.h>
+	<fcntl.h>
+	<string.h>
+	<sys/ioctl.h>
+	<sys/types.h>
+	<termios.h>
+	<unistd.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/linux/timer.cpp
+	"ctb-0.16/timer.h"
+	<unistd.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/portscan.cpp
+	"ctb-0.16/ctb.h"
+	"ctb-0.16/portscan.h"
+	<sstream>
+	<glob.h>
+
+1576912864 source:/home/netpipe/Desktop/ArduinoUploader/libctb/src/serportx.cpp
+	"ctb-0.16/serportx.h"
+	<sstream>
+	"win32/serport.cpp"
+	"win32/timer.cpp"
+	"linux/serport.cpp"
+	"linux/timer.cpp"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/src/win32/serport.cpp
+	<string.h>
+	"ctb-0.16/serport.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/src/win32/timer.cpp
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	"ctb-0.16/timer.h"
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/src/linux/serport.cpp
+	"ctb-0.16/linux/serport.h"
+	<errno.h>
+	<fcntl.h>
+	<string.h>
+	<sys/ioctl.h>
+	<sys/types.h>
+	<termios.h>
+	<unistd.h>
+
+1576912864 /home/netpipe/Desktop/ArduinoUploader/libctb/src/linux/timer.cpp
+	"ctb-0.16/timer.h"
+	<unistd.h>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/ctb.h
+	"ctb-0.16/fifo.h"
+	"ctb-0.16/gpib.h"
+	"ctb-0.16/getopt.h"
+	"ctb-0.16/iobase.h"
+	"ctb-0.16/kbhit.h"
+	"ctb-0.16/portscan.h"
+	"ctb-0.16/serport.h"
+	"ctb-0.16/serportx.h"
+	"ctb-0.16/timer.h"
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/fifo.h
+	<sys/types.h>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/gpib.h
+	"ctb-0.16/iobase.h"
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/iobase.h
+	"ctb-0.16/fifo.h"
+	<sys/types.h>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/getopt.h
+	"win32/getopt.h"
+	<getopt.h>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/win32/getopt.h
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/kbhit.h
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/portscan.h
+	<string>
+	<vector>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/serport.h
+	"ctb-0.16/win32/serport.h"
+	"ctb-0.16/linux/serport.h"
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/win32/serport.h
+	"../serportx.h"
+	<windows.h>
+
+1291037119 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/serportx.h
+	<stdio.h>
+	<string.h>
+	"ctb-0.16/iobase.h"
+
+1285508990 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/linux/serport.h
+	"ctb-0.16/serportx.h"
+	<linux/serial.h>
+	<termios.h>
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/timer.h
+	"win32/timer.h"
+	"linux/timer.h"
+
+1285508991 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/win32/timer.h
+	<windows.h>
+
+1285508990 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/linux/timer.h
+	<pthread.h>
+

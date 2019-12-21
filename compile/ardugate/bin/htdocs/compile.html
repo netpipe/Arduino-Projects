@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Online Arduino Sketch Builder</title>
+<link rel="stylesheet" href="cm/lib/codemirror.css">
+<script src="cm/lib/codemirror.js"></script>
+<script src="cm/mode/clike/clike.js"></script>
+<link rel="stylesheet" href="cm/doc/docs.css">
+<style type="text/css">
+  .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}
+  .activeline {background: #e8f2ff !important;}
+</style>
+</head>
+
+<body style="font-family:Verdana; font-size:small">
+<h2 align="center">ArduGate Demo </h2>
+<p align="center"><a href="index.html">Control</a> | Compile</p>
+<div align="center" id="ver"></div>
+</p>
+<p align="center">This online service compiles your Arduino sketch and generate the <a href="http://en.wikipedia.org/wiki/Hex_file" target="_blank">HEX file</a> and<br />
+can be uploaded to Arduino board directly from this page.</p>
+<p align="center"></br>
+  Note: only standard <a href="http://arduino.cc/en/Reference/Libraries" target="_blank">Arduino libraries</a> are supported now</p>
+<p>
+<div id="stats" align="center"></div>
+</p>
+<form action="/build.hex" method="post" target="_blank">
+<div id="boardInfo"></div>
+<select id="board" name="board" onchange="Update()">
+<option value="1">Arduino Uno</option>
+<option value="2">Arduino Duemilanove (328)</option>
+<option value="3">Arduino Duemilanove (168)</option>
+<option value="4">Arduino Nano (328)</option>
+<option value="5">Arduino Nano (168)</option>
+<option value="6">Arduino Mini (328)</option>
+<option value="7">Arduino Mini (168)</option>
+<option value="8">Arduino Pro Mini (328)</option>
+<option value="9">Arduino Pro Mini (168)</option>
+<option value="10">Arduino Mega 2560/ADK</option>
+<option value="11">Arduino Mega</option>
+</select>
+<p>Paste your Arduino sketch here and click the button below to get it compiled.</p>
+<textarea id="code" name="sketch" style="width: 100%;">
+/*
+  Blink
+  Turns on an LED on for one second, then off for one second, repeatedly.
+
+  This example code is in the public domain.
+ */
+
+// Pin 13 has an LED connected on most Arduino boards.
+// give it a name:
+int led = 13;
+
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize the digital pin as an output.
+  pinMode(led, OUTPUT);
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);               // wait for a second
+  digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);               // wait for a second
+}
+</textarea>
+<script>
+CodeMirror.commands.save = function(){ alert("Saving"); };
+ 
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+  mode: "text/x-csrc",
+  lineNumbers: true,
+  lineWrapping: true,
+  onCursorActivity: function() {
+    editor.setLineClass(hlLine, null, null);
+    hlLine = editor.setLineClass(editor.getCursor().line, null, "activeline");
+  }
+});
+var hlLine = editor.setLineClass(0, "activeline");
+</script>
+<p align="center"><input type="submit" name="build" value="Build and download the HEX file" />
+</p>
+<p>&nbsp;</p>
+</form>
+<form id="uploadfrm" action="/upload" method="post" target="frm">
+<table><tr><td width="500">
+    <textarea id="hex" name="hex" cols="48" rows="6"></textarea>
+</td>
+<td align="center">
+  <p>
+    <input type="button" value="Build and upload to Arduino" onclick="BuildUpload()"/>
+    </p>
+  <p>Serial
+    Port:
+  <input type="text" name="port" value="COM18" size="6"/>
+    <input type="hidden" id="mcu" name="mcu" value="atmega328p"/><input type="hidden" id="baudrate" name="baudrate" value="57600"/>
+  </p>
+  <p style="font-size:smaller"><a href="http://files.arduinodev.com/avrduded-win32-0.1.7z" target="_blank">Download AVRDUDEd</a></p>
+  </td>
+</tr></table>
+</form>
+<iframe width="100%" height="40" frameborder="0" name="frm" scrolling="no"></iframe>
+<script language="JavaScript" src="/stats.js"></script>
+<script language="JavaScript" src="sketchbuilder.js"></script>
+</body>
+</html>
