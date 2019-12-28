@@ -1,0 +1,70 @@
+/* Audio Pitch Shifter
+ 
+   David Johnson-Davies - www.technoblogy.com - 11th February 2017
+   ATtiny85 @ 8MHz (internal oscillator; BOD disabled)
+   
+   CC BY 4.0
+   Licensed under a Creative Commons Attribution 4.0 International license: 
+   http://creativecommons.org/licenses/by/4.0/
+*/
+
+volatile uint8_t Buffer[256];             // Circular buffer
+volatile uint8_t ReadPtr, WritePtr, LastPtr, New;
+
+// Everything done by interrupts **********************************
+
+// ADC conversion complete - save sample in buffer
+ISR (ADC_vect) {
+  Buffer[LastPtr] = New;
+  New = ADCH + 128;
+  Buffer[WritePtr] = (Buffer[WritePtr] + New)>>1;
+  LastPtr = WritePtr;
+  WritePtr = (WritePtr + 1) & 0xFF;
+}
+
+// Timer interrupt - read from buffer and output to DAC
+ISR (TIMER0_COMPA_vect) {
+  OCR1A = Buffer[ReadPtr];
+  ReadPtr = (ReadPtr + 1) & 0xFF;
+}
+
+// Pin change interrupt adjusts shift
+ISR (PCINT0_vect) {
+  int Buttons = PINB;
+  if ((Buttons & 0x01) == 0) OCR0A++;
+  else if ((Buttons & 0x04) == 0) OCR0A--;
+}
+
+// Setup **********************************************
+  
+void setup () {
+  // Enable 64 MHz PLL and use as source for Timer1
+  PLLCSR = 1<<PCKE | 1<<PLLE;     
+
+  // Set up Timer/Counter1 for PWM output
+  TIMSK = 0;                              // Timer interrupts OFF
+  TCCR1 = 1<<PWM1A | 2<<COM1A0 | 1<<CS10; // PWM OCR1A, clear on match, 1:1 prescale
+  OCR1A = 128;
+  pinMode(1, OUTPUT);                     // Enable OC1A PWM output pin
+
+  // Set up Timer/Counter0 to generate 20kHz interrupt
+  TCCR0A = 2<<WGM00;                      // CTC mode
+  TCCR0B = 2<<CS00;                       // /8 prescaler
+  OCR0A = 55;                             // 17.9kHz interrupt
+  TIMSK = TIMSK | 1<<OCIE0A;              // Enable interrupt
+  
+  // Set up ADC
+  ADMUX = 2<<REFS0 | 1<<ADLAR | 7<<MUX0;  // Internal 1.1V ref, ADC2 vs ADC3, x20
+  // Enable, auto trigger, interrupt, 250kHz ADC clock:
+  ADCSRA = 1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIE | 5<<ADPS0;  
+  ADCSRB = 1<<7 | 0<<ADTS0;               // Bipolar, free-running
+
+  // Set up buttons on PB0 and PB2
+  pinMode(0, INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
+  PCMSK = 1<<PINB0 | 1<<PINB2;            // Pin change interrupts on PB0 and PB2
+  GIMSK = GIMSK | 1<<PCIE;                // Enable pin change interrupt
+}
+
+void loop () {
+}
