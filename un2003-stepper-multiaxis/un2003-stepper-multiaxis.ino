@@ -8,16 +8,19 @@
 
 // this arrangement is better than stepper.h for torque
 // still WIP for some reason the motor is only using 2 of the pins
+#ifdef EXPANDER
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x38,A4,A5);
+#endif
 //declare variables for the motor pins 
-int motorPin1 = 0;    
-int motorPin2 = 0;    
-int motorPin3 = 0;   
-int motorPin4 = 0;   
+int motorPin1 = A0;    
+int motorPin2 = A1;    
+int motorPin3 = A2;   
+int motorPin4 = A3;   
 //leave as 0
 
 static char motor1Pins[]= {A0,A1,A2,A3};
+//static int motor1Pins[]= {0,1,2,3};
 static int motor2Pins[]= {4,5,6,7};
 static int motor3Pins[]= {8,9,10,11};
 static int motor4Pins[]= {12,13,14,15};
@@ -41,6 +44,10 @@ void setup()
     pinMode(motorPin2, OUTPUT);
     pinMode(motorPin3, OUTPUT);
     pinMode(motorPin4, OUTPUT);
+      digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
   }
 #ifdef EXPANDER
   pe.pinMode(motorPin1, OUTPUT);
@@ -59,9 +66,20 @@ void setup()
 void loop()
   {
 for (int i=0; i < countsperrev;i++){
-  step(-1,0); // direction and motor
+  step(-1,0); // direction and motor  -- not working yet
+ //anticlockwise();
 }
   }
+
+  void anticlockwise()
+{
+  for(int i = 0; i < 8; i++)
+  {
+    setOutput(i);
+    delayMicroseconds(motorSpeed);
+  }
+}
+
 
 int mpos[]={0,0,0}; //1 to 8 position lookup table has continous mode modulus too
 
@@ -69,10 +87,10 @@ int mpos[]={0,0,0}; //1 to 8 position lookup table has continous mode modulus to
 void step(char dir,int motor) // direction is set with 1/-1
 {
   
-setmotor(motor);
-
   mpos[motor] = (mpos[motor] + dir) % 8;
  
+setmotor(motor);
+
   delayMicroseconds(motorSpeed);
   
 }
@@ -116,16 +134,18 @@ void setmotor(int motor){
 
 void setOutput(int out)
 {
-  
   digitalWrite(motorPin1, bitRead(lookup[out], 0));
   digitalWrite(motorPin2, bitRead(lookup[out], 1));
   digitalWrite(motorPin3, bitRead(lookup[out], 2));
   digitalWrite(motorPin4, bitRead(lookup[out], 3));
 }
+
 void setOutputpe(int out)
 {
-  pe.digitalWrite(motorPin1, bitRead(lookup[out], 0));
-  pe.digitalWrite(motorPin2, bitRead(lookup[out], 1));
-  pe.digitalWrite(motorPin3, bitRead(lookup[out], 2));
-  pe.digitalWrite(motorPin4, bitRead(lookup[out], 3));
+  #ifdef EXPANDER
+    pe.digitalWrite(motorPin1, bitRead(lookup[out], 0));
+    pe.digitalWrite(motorPin2, bitRead(lookup[out], 1));
+    pe.digitalWrite(motorPin3, bitRead(lookup[out], 2));
+    pe.digitalWrite(motorPin4, bitRead(lookup[out], 3));
+  #endif
 }
