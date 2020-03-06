@@ -28,8 +28,10 @@ static char motor1Pins[]= {A0,A1,A2,A3};
 //static int motor1Pins[]= {0,1,2,3};
 static int motor2Pins[]= {4,5,6,7};
 static int motor3Pins[]= {8,9,10,11};
-static int motor4Pins[]= {0,1,2,3};
 
+// i2c motors
+static int motor4Pins[]= {0,1,2,3};
+static int motor5Pins[]= {4,5,6,7};
 
 int motorSpeed = 1200;  //variable to set stepper speed
                         // Experiment with this; too small will not work.
@@ -46,8 +48,8 @@ void setup()
       pe.init();
     #endif
   //declare the motor pins as outputs
-  for (int i=0; i < 1; i++){
-    setmotor(0);
+  for (int i=0; i < 3; i++){
+    setmotor(i);
     pinMode(motorPin1, OUTPUT);
     pinMode(motorPin2, OUTPUT);
     pinMode(motorPin3, OUTPUT);
@@ -57,7 +59,8 @@ void setup()
   digitalWrite(motorPin3, LOW);
   digitalWrite(motorPin4, LOW);
   }
-#ifdef EXPANDER
+#ifdef EXPANDER // expander can hold 2 extra stepper motors
+  setmotor(3);
   pe.pinMode(motorPin1, OUTPUT);
   pe.pinMode(motorPin2, OUTPUT);
   pe.pinMode(motorPin3, OUTPUT);
@@ -66,6 +69,16 @@ void setup()
   pe.digitalWrite(motorPin2, LOW);
   pe.digitalWrite(motorPin3, LOW);
   pe.digitalWrite(motorPin4, LOW);
+  setmotor(4);
+  pe.pinMode(motorPin1, OUTPUT);
+  pe.pinMode(motorPin2, OUTPUT);
+  pe.pinMode(motorPin3, OUTPUT);
+  pe.pinMode(motorPin4, OUTPUT);
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+  
 #endif
                   
   Serial.begin(9600);
@@ -79,7 +92,7 @@ void loop()
     }
   }
 
-  void anticlockwise()
+  void anticlockwise() // testing function for torque and speed
 {
   for(int i = 0; i < 8; i++)
   {
