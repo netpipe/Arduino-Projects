@@ -12,11 +12,15 @@
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x38,A4,A5);
 #endif
+
+int mpos[]={0,0,0,0}; //4 motors 1 to 8 position lookup table has continous mode modulus too
+
+
 //declare variables for the motor pins 
-int motorPin1 = A0;    
-int motorPin2 = A1;    
-int motorPin3 = A2;   
-int motorPin4 = A3;   
+int motorPin1 = 0;    
+int motorPin2 = 0;    
+int motorPin3 = 0;   
+int motorPin4 = 0;   
 //leave as 0
 
 static char motor1Pins[]= {A0,A1,A2,A3};
@@ -65,10 +69,10 @@ void setup()
 
 void loop()
   {
-for (int i=0; i < countsperrev;i++){
-  step(-1,0); // direction and motor  -- not working yet
- //anticlockwise();
-}
+    for (int i=0; i < countsperrev;i++){
+      step(1,0); // direction and motor  -- not moving in negative direction yet
+      //anticlockwise();
+    }
   }
 
   void anticlockwise()
@@ -81,18 +85,14 @@ for (int i=0; i < countsperrev;i++){
 }
 
 
-int mpos[]={0,0,0}; //1 to 8 position lookup table has continous mode modulus too
-
-
 void step(char dir,int motor) // direction is set with 1/-1
 {
-  
   mpos[motor] = (mpos[motor] + dir) % 8;
- 
-setmotor(motor);
-
-  delayMicroseconds(motorSpeed);
+  //  Serial.println("motor position");
+  //Serial.println(mpos[motor]);
   
+  setmotor(motor);
+
 }
 
 
@@ -106,6 +106,7 @@ void setmotor(int motor){
     motorPin3 = motor1Pins[2];   
     motorPin4 = motor1Pins[3];
     setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
     break;  
   case 1:
     motorPin1 = motor2Pins[0];
@@ -113,13 +114,15 @@ void setmotor(int motor){
     motorPin3 = motor2Pins[2];   
     motorPin4 = motor2Pins[3];
     setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
     break;  
   case 2:
     motorPin1 = motor3Pins[0];
     motorPin2 = motor3Pins[1];   
     motorPin3 = motor3Pins[2];   
     motorPin4 = motor3Pins[3];
-      setOutput(mpos[motor]);
+    setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
     break;  
   case 3: // i2c expander
     motorPin1 = motor4Pins[0];
@@ -127,6 +130,7 @@ void setmotor(int motor){
     motorPin3 = motor4Pins[2];   
     motorPin4 = motor4Pins[3];
     setOutputpe(mpos[motor]);
+      delayMicroseconds(motorSpeed);
     break;  
   }
   
