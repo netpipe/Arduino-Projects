@@ -21,9 +21,43 @@
   not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+//#define EXPANDER
+#ifdef EXPANDER
+#include <PortExpander_I2C-swire.h> 
+PortExpander_I2C pe(0x38,A4,A5);
+#endif
+
+
+unsigned int mpos[]={0,0,0,0}; //4 motors 1 to 8 position lookup table has continous mode modulus too
+
+
+//declare variables for the motor pins 
+int motorPin1 = 0;    
+int motorPin2 = 0;    
+int motorPin3 = 0;   
+int motorPin4 = 0;   
+
+static char motor1Pins[]= {A0,A1,A2,A3};
+//static int motor1Pins[]= {0,1,2,3};
+static int motor2Pins[]= {4,5,6,7};
+static int motor3Pins[]= {8,9,10,11};
+
+// i2c motors
+static int motor4Pins[]= {0,1,2,3};
+static int motor5Pins[]= {4,5,6,7};
+
+int motorSpeed = 1200;  //variable to set stepper speed
+                        // Experiment with this; too small will not work.
+int count = 0;          // count of steps made
+int countsperrev = 560; // number of steps per revolution for this motor
+
+int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
+
+
 // -------------------------------
 // GLOBALS
 // -------------------------------
+
 
 // ----- constants
 #define PI 3.1415926535897932384626433832795
@@ -101,31 +135,116 @@ Y,
 I,
 J;
 
+void setmotor(int motor){
+  
+  switch(motor){
+  case 0:
+    motorPin1 = motor1Pins[0];
+    motorPin2 = motor1Pins[1];   
+    motorPin3 = motor1Pins[2];   
+    motorPin4 = motor1Pins[3];
+    setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
+  case 1:
+    motorPin1 = motor2Pins[0];
+    motorPin2 = motor2Pins[1];   
+    motorPin3 = motor2Pins[2];   
+    motorPin4 = motor2Pins[3];
+    setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
+  case 2:
+    motorPin1 = motor3Pins[0];
+    motorPin2 = motor3Pins[1];   
+    motorPin3 = motor3Pins[2];   
+    motorPin4 = motor3Pins[3];
+    setOutput(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
+  case 3: // i2c expander
+    motorPin1 = motor4Pins[0];
+    motorPin2 = motor4Pins[1];   
+    motorPin3 = motor4Pins[2];   
+    motorPin4 = motor4Pins[3];
+    setOutputpe(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
+      case 4: // i2c expander
+    motorPin1 = motor4Pins[0];
+    motorPin2 = motor4Pins[1];   
+    motorPin3 = motor4Pins[2];   
+    motorPin4 = motor4Pins[3];
+    setOutputpe(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
+  }
+  
+}
+
+
 // -----------------------
 // SETUP
 // -----------------------
 void setup()
 {
+      #ifdef EXPANDER
+      pe.init();
+    #endif
+     for (int i=0; i < 3; i++){
+    setmotor(i);
+    pinMode(motorPin1, OUTPUT);
+    pinMode(motorPin2, OUTPUT);
+    pinMode(motorPin3, OUTPUT);
+    pinMode(motorPin4, OUTPUT);
+      digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
+  }
+#ifdef EXPANDER // expander can hold 2 extra stepper motors
+  setmotor(3);
+  pe.pinMode(motorPin1, OUTPUT);
+  pe.pinMode(motorPin2, OUTPUT);
+  pe.pinMode(motorPin3, OUTPUT);
+  pe.pinMode(motorPin4, OUTPUT);
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+  setmotor(4);
+  pe.pinMode(motorPin1, OUTPUT);
+  pe.pinMode(motorPin2, OUTPUT);
+  pe.pinMode(motorPin3, OUTPUT);
+  pe.pinMode(motorPin4, OUTPUT);
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+  
+#endif
+
+
   // ----- initialise motor1
-  pinMode(STEP1, OUTPUT);
-  pinMode(DIRECTION1, OUTPUT);
-  digitalWrite(DIRECTION1, CW);
-  delayMicroseconds(PULSE_WIDTH);
-  digitalWrite(STEP1, LOW);
+ // pinMode(STEP1, OUTPUT);
+ // pinMode(DIRECTION1, OUTPUT);
+ // digitalWrite(DIRECTION1, CW);
+//  delayMicroseconds(PULSE_WIDTH);
+ // digitalWrite(STEP1, LOW);
 
   // ----- initialise motor2
-  pinMode(STEP2, OUTPUT);
-  pinMode(DIRECTION2, OUTPUT);
-  digitalWrite(DIRECTION2, CW);
-  delayMicroseconds(PULSE_WIDTH);
-  digitalWrite(STEP2, LOW);
+ // pinMode(STEP2, OUTPUT);
+ // pinMode(DIRECTION2, OUTPUT);
+ // digitalWrite(DIRECTION2, CW);
+ // delayMicroseconds(PULSE_WIDTH);
+ // digitalWrite(STEP2, LOW);
 
   // ----- initialise motor3
-  pinMode(STEP3, OUTPUT);
-  pinMode(DIRECTION3, OUTPUT);
-  digitalWrite(DIRECTION3, CW);
-  delayMicroseconds(PULSE_WIDTH);
-  digitalWrite(STEP3, LOW);
+ // pinMode(STEP3, OUTPUT);
+ // pinMode(DIRECTION3, OUTPUT);
+  //digitalWrite(DIRECTION3, CW);
+  //delayMicroseconds(PULSE_WIDTH);
+ // digitalWrite(STEP3, LOW);
 
   // ----- pen-lift
   pinMode(PEN, OUTPUT);                                       //D3
@@ -176,6 +295,21 @@ void setup()
 
   // ----- display commands
   menu();
+}
+
+void step(char dir,int motor) // direction is set with 1/-1
+{
+  mpos[motor] = (mpos[motor] + dir) % 8;
+   //   if(mpos[motor]<0)
+   // {
+  //       mpos[motor]=-mpos[motor];
+  //  }
+ //   Serial.println("motor position");
+ // Serial.println(mpos[motor]);
+  
+  setmotor(motor);
+  //mpos[motor] = (mpos[motor] + dir);
+
 }
 
 //--------------------------------------------------------------------------
@@ -653,7 +787,10 @@ void left() {
   DIR1 = CW;
   DIR2 = CCW;
   DIR3 = CCW;
-  step_motors();
+  step(CW,0);
+  step(CCW,1);
+  step(CCW,2);
+  //step_motors();
 }
 
 //--------------------------------------------------------------------
@@ -664,7 +801,11 @@ void right() {
   DIR1 = CCW;
   DIR2 = CW;
   DIR3 = CW;
-  step_motors();
+
+  step(-1,0);
+  step(-1,1);
+  step(-1,2);
+  //step_motors();
 }
 
 //--------------------------------------------------------------------
@@ -675,7 +816,12 @@ void up() {
   DIR1 = CW;           // Ignored
   DIR2 = CCW;
   DIR3 = CW;
-  step_motors();
+  
+  step(CW,0);
+  step(CCW,1);
+  step(CW,2);
+  
+  //step_motors();
 }
 
 //--------------------------------------------------------------------
@@ -686,13 +832,16 @@ void down() {
   DIR1 = CW;           // Ignored
   DIR2 = CW;
   DIR3 = CCW;
-  step_motors();
+  step(CW,0);
+  step(CW,1);
+  step(CCW,2);
+ // step_motors();
 }
 
 //----------------------------------------------------------------------------------------
 // STEP MOTORS
 //----------------------------------------------------------------------------------------
-void step_motors() {
+void step_motors() {  // not sure if this is needed more than replacing the move functions todo still
 
   // ----- locals
   enum {dir3, step3, dir2, step2, dir1, step1};                   //define bit positions
@@ -1196,4 +1345,23 @@ void radials() {
 
   // home --------------
   move_to(0.0000, 0.0000);
+}
+
+
+void setOutput(int out)
+{
+  digitalWrite(motorPin1, bitRead(lookup[out], 0));
+  digitalWrite(motorPin2, bitRead(lookup[out], 1));
+  digitalWrite(motorPin3, bitRead(lookup[out], 2));
+  digitalWrite(motorPin4, bitRead(lookup[out], 3));
+}
+
+void setOutputpe(int out)
+{
+  #ifdef EXPANDER
+    pe.digitalWrite(motorPin1, bitRead(lookup[out], 0));
+    pe.digitalWrite(motorPin2, bitRead(lookup[out], 1));
+    pe.digitalWrite(motorPin3, bitRead(lookup[out], 2));
+    pe.digitalWrite(motorPin4, bitRead(lookup[out], 3));
+  #endif
 }
