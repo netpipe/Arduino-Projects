@@ -5,6 +5,9 @@
 // the other on motor pins 2 & 4. The step angle is 5.625/64 and the
 // operating Frequency is 100pps. Current draw is 92mA.
 ////////////////////////////////////////////////
+
+// this arrangement is better than stepper.h for torque
+// still WIP for some reason the motor is only using 2 of the pins
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x38,A4,A5);
 //declare variables for the motor pins 
@@ -14,7 +17,7 @@ int motorPin3 = 0;
 int motorPin4 = 0;   
 //leave as 0
 
-static int motor1Pins[]= {0,1,2,3};
+static char motor1Pins[]= {A0,A1,A2,A3};
 static int motor2Pins[]= {4,5,6,7};
 static int motor3Pins[]= {8,9,10,11};
 static int motor4Pins[]= {12,13,14,15};
@@ -32,12 +35,12 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 void setup() 
   {
   //declare the motor pins as outputs
-  for (int i=0; i < 4; i++){
- setmotor(i);
-  pinMode(motorPin1, OUTPUT);
-  pinMode(motorPin2, OUTPUT);
-  pinMode(motorPin3, OUTPUT);
-  pinMode(motorPin4, OUTPUT);
+  for (int i=0; i < 1; i++){
+    setmotor(i);
+    pinMode(motorPin1, OUTPUT);
+    pinMode(motorPin2, OUTPUT);
+    pinMode(motorPin3, OUTPUT);
+    pinMode(motorPin4, OUTPUT);
   }
 #ifdef EXPANDER
   pe.pinMode(motorPin1, OUTPUT);
@@ -55,9 +58,9 @@ void setup()
 
 void loop()
   {
-
-step(-1,0);
-
+for (int i=0; i < countsperrev;i++){
+  step(-1,0); // direction and motor
+}
   }
 
 int mpos[]={0,0,0}; //1 to 8 position lookup table has continous mode modulus too
