@@ -32,20 +32,23 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 void setup() 
   {
   //declare the motor pins as outputs
+  for (int i=0; i < 4; i++){
+ setmotor(i);
   pinMode(motorPin1, OUTPUT);
   pinMode(motorPin2, OUTPUT);
   pinMode(motorPin3, OUTPUT);
   pinMode(motorPin4, OUTPUT);
-  
-
-    pe.pinMode(motorPin1, OUTPUT);
+  }
+#ifdef EXPANDER
+  pe.pinMode(motorPin1, OUTPUT);
   pe.pinMode(motorPin2, OUTPUT);
   pe.pinMode(motorPin3, OUTPUT);
   pe.pinMode(motorPin4, OUTPUT);
-      pe.digitalWrite(motorPin1, LOW);
-          pe.digitalWrite(motorPin2, LOW);
-              pe.digitalWrite(motorPin3, LOW);
-                  pe.digitalWrite(motorPin4, LOW);
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+#endif
                   
   Serial.begin(9600);
   }
@@ -59,46 +62,54 @@ step(-1,0);
 
 int mpos[]={0,0,0}; //1 to 8 position lookup table has continous mode modulus too
 
+
 void step(char dir,int motor) // direction is set with 1/-1
 {
-  mpos[motor] = (mpos[motor] + dir) % 8;
   
-switch(motor){
+setmotor(motor);
+
+  mpos[motor] = (mpos[motor] + dir) % 8;
+ 
+  delayMicroseconds(motorSpeed);
+  
+}
+
+
+
+void setmotor(int motor){
+  
+  switch(motor){
   case 0:
-    motorPin1 = motor1Pins[0]
+    motorPin1 = motor1Pins[0];
     motorPin2 = motor1Pins[1];   
     motorPin3 = motor1Pins[2];   
     motorPin4 = motor1Pins[3];
     setOutput(mpos[motor]);
     break;  
   case 1:
-    motorPin1 = motor2Pins[0]
+    motorPin1 = motor2Pins[0];
     motorPin2 = motor2Pins[1];   
     motorPin3 = motor2Pins[2];   
     motorPin4 = motor2Pins[3];
     setOutput(mpos[motor]);
     break;  
   case 2:
-    motorPin1 = motor3Pins[0]
+    motorPin1 = motor3Pins[0];
     motorPin2 = motor3Pins[1];   
     motorPin3 = motor3Pins[2];   
     motorPin4 = motor3Pins[3];
       setOutput(mpos[motor]);
     break;  
   case 3: // i2c expander
-    motorPin1 = motor4Pins[0]
+    motorPin1 = motor4Pins[0];
     motorPin2 = motor4Pins[1];   
     motorPin3 = motor4Pins[2];   
     motorPin4 = motor4Pins[3];
     setOutputpe(mpos[motor]);
     break;  
   }
-
-  delayMicroseconds(motorSpeed);
   
 }
-
-
 
 void setOutput(int out)
 {
