@@ -42,7 +42,9 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 
 void setup() 
   {
-    pe.init();
+    #ifdef EXPANDER
+      pe.init();
+    #endif
   //declare the motor pins as outputs
   for (int i=0; i < 1; i++){
     setmotor(0);
