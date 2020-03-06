@@ -7,9 +7,10 @@
 ////////////////////////////////////////////////
 
 // this arrangement is better than stepper.h for torque
-// still WIP for some reason the motor is only using 2 of the pins
+
+//#define EXPANDER
 #ifdef EXPANDER
-#include <PortExpander_I2C-swire.h>
+#include <PortExpander_I2C-swire.h> 
 PortExpander_I2C pe(0x38,A4,A5);
 #endif
 
@@ -27,7 +28,7 @@ static char motor1Pins[]= {A0,A1,A2,A3};
 //static int motor1Pins[]= {0,1,2,3};
 static int motor2Pins[]= {4,5,6,7};
 static int motor3Pins[]= {8,9,10,11};
-static int motor4Pins[]= {12,13,14,15};
+static int motor4Pins[]= {0,1,2,3};
 
 
 int motorSpeed = 1200;  //variable to set stepper speed
@@ -41,9 +42,10 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 
 void setup() 
   {
+    pe.init();
   //declare the motor pins as outputs
   for (int i=0; i < 1; i++){
-    setmotor(i);
+    setmotor(0);
     pinMode(motorPin1, OUTPUT);
     pinMode(motorPin2, OUTPUT);
     pinMode(motorPin3, OUTPUT);
@@ -70,7 +72,7 @@ void setup()
 void loop()
   {
     for (int i=0; i < countsperrev;i++){
-      step(-1,0); // direction and motor  -- not moving in negative direction yet
+      step(-1,3); // direction and motor  -- not moving in negative direction yet
       //anticlockwise();
     }
   }
@@ -93,7 +95,7 @@ void step(char dir,int motor) // direction is set with 1/-1
   //       mpos[motor]=-mpos[motor];
   //  }
  //   Serial.println("motor position");
-//  Serial.println(mpos[motor]);
+ // Serial.println(mpos[motor]);
   
   setmotor(motor);
   //mpos[motor] = (mpos[motor] + dir);
