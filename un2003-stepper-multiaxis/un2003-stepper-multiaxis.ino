@@ -13,7 +13,7 @@
 PortExpander_I2C pe(0x38,A4,A5);
 #endif
 
-int mpos[]={0,0,0,0}; //4 motors 1 to 8 position lookup table has continous mode modulus too
+unsigned int mpos[]={0,0,0,0}; //4 motors 1 to 8 position lookup table has continous mode modulus too
 
 
 //declare variables for the motor pins 
@@ -70,7 +70,7 @@ void setup()
 void loop()
   {
     for (int i=0; i < countsperrev;i++){
-      step(1,0); // direction and motor  -- not moving in negative direction yet
+      step(-1,0); // direction and motor  -- not moving in negative direction yet
       //anticlockwise();
     }
   }
@@ -88,10 +88,15 @@ void loop()
 void step(char dir,int motor) // direction is set with 1/-1
 {
   mpos[motor] = (mpos[motor] + dir) % 8;
-  //  Serial.println("motor position");
-  //Serial.println(mpos[motor]);
+   //   if(mpos[motor]<0)
+   // {
+  //       mpos[motor]=-mpos[motor];
+  //  }
+ //   Serial.println("motor position");
+//  Serial.println(mpos[motor]);
   
   setmotor(motor);
+  //mpos[motor] = (mpos[motor] + dir);
 
 }
 
