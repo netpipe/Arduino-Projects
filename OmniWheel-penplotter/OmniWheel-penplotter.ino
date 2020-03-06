@@ -21,6 +21,9 @@
   not, see <http://www.gnu.org/licenses/>.
 ***************************************************************************/
 
+//todo get un2003 motors working with penplotter
+// usb optical mouse for more accurate positions
+
 //#define EXPANDER
 #ifdef EXPANDER
 #include <PortExpander_I2C-swire.h> 
@@ -46,8 +49,8 @@ static int motor3Pins[]= {8,9,10,11};
 static int motor4Pins[]= {0,1,2,3};
 static int motor5Pins[]= {4,5,6,7};
 
-int motorSpeed = 1200;  //variable to set stepper speed
-                        // Experiment with this; too small will not work.
+int motorSpeed = 1200;  //variable to set stepper speed use ramping to make faster todo
+                        // Experiment with this; too small will not turn the motors.
 int count = 0;          // count of steps made
 int countsperrev = 560; // number of steps per revolution for this motor
 
@@ -73,7 +76,8 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 #define TOG(x,y) (x^=(1<<y))
 
 // ----- motor definitions
-#define STEPS_PER_MM 200*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
+//#define STEPS_PER_MM 200*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
+#define STEPS_PER_MM 570*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
 #define NUDGE STEPS_PER_MM*5          //move pen 5mm (change number to suit)
 #define STEP1 13                      //arduino ports
 #define STEP2 11
@@ -82,8 +86,8 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 #define DIRECTION2 10
 #define DIRECTION3 8
 
-#define CW false
-#define CCW true
+#define CW -1
+#define CCW 1
 bool ROTATE1;                       // Wheel W1 doesn't rotate in vertical direction
 bool DIR1;                          // Wheel W1
 bool DIR2;                          // Wheel W2
