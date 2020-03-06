@@ -276,3 +276,153 @@
 1285508990 /home/netpipe/Desktop/ArduinoUploader/libctb/libctb-0.16/include/ctb-0.16/linux/timer.h
 	<pthread.h>
 
+1576915372 source:/home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<sstream>
+	<string>
+	<bits/stdc++.h>
+	<iostream>
+	<sys/stat.h>
+	<sys/types.h>
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1576912864 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/syspil.h
+	<windows.h>
+	<io.h>
+	<stdlib.h>
+	<unistd.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<sys/time.h>
+	<signal.h>
+	<sys/types.h>
+	<sys/wait.h>
+	<sys/select.h>
+	<pthread.h>
+
+1576912864 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/processpil.h
+
+1576915145 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/sketchbuild.h
+	<iostream>
+	<sstream>
+	<string>
+	<vector>
+	<memory.h>
+
+1576912864 source:/home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/processpil.c
+	<windows.h>
+	<io.h>
+	<unistd.h>
+	<sys/time.h>
+	<signal.h>
+	<sys/types.h>
+	<sys/wait.h>
+	<sys/select.h>
+	<stdio.h>
+	<fcntl.h>
+	<stdlib.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	"processpil.h"
+
+1576915448 source:/home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/sketchbuild.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<fcntl.h>
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1576912864 source:/home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/syspil.c
+	<stdio.h>
+	<time.h>
+	<string.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<ctype.h>
+	<fcntl.h>
+	"syspil.h"
+	<sys/types.h>
+	<sys/time.h>
+	<dirent.h>
+	<unistd.h>
+
+1576915535 source:/home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/src/uploader.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<sstream>
+	<string>
+	"ctb-0.16/ctb.h"
+	"syspil.h"
+	"processpil.h"
+	"sketchbuild.h"
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/ctb.h
+	"ctb-0.16/fifo.h"
+	"ctb-0.16/gpib.h"
+	"ctb-0.16/getopt.h"
+	"ctb-0.16/iobase.h"
+	"ctb-0.16/kbhit.h"
+	"ctb-0.16/portscan.h"
+	"ctb-0.16/serport.h"
+	"ctb-0.16/serportx.h"
+	"ctb-0.16/timer.h"
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/fifo.h
+	<sys/types.h>
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/gpib.h
+	"ctb-0.16/iobase.h"
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/iobase.h
+	"ctb-0.16/fifo.h"
+	<sys/types.h>
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/getopt.h
+	"win32/getopt.h"
+	<getopt.h>
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/win32/getopt.h
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/kbhit.h
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/portscan.h
+	<string>
+	<vector>
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/serport.h
+	"ctb-0.16/win32/serport.h"
+	"ctb-0.16/linux/serport.h"
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/win32/serport.h
+	"../serportx.h"
+	<windows.h>
+
+1291037119 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/serportx.h
+	<stdio.h>
+	<string.h>
+	"ctb-0.16/iobase.h"
+
+1285508990 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/linux/serport.h
+	"ctb-0.16/serportx.h"
+	<linux/serial.h>
+	<termios.h>
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/timer.h
+	"win32/timer.h"
+	"linux/timer.h"
+
+1285508991 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/win32/timer.h
+	<windows.h>
+
+1285508990 /home/netpipe/Arduino/Arduino-Projects/compile/ArduinoUploader/libctb-0.16/include/ctb-0.16/linux/timer.h
+	<pthread.h>
+

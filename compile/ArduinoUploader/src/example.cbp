@@ -18,7 +18,8 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="/home/Dev/libs/game/Irrlicht-SVN/include" />
-			<Add directory="../libctb/libctb-0.16/include" />
+			<Add directory="../libctb-0.16/include" />
+			<Add directory="../" />
 		</Compiler>
 		<Linker>
 			<Add library="Irrlicht" />
@@ -28,7 +29,7 @@
 			<Add library="pthread" />
 			<Add library="ctb-0.16" />
 			<Add directory="/home/Dev/libs/game/Irrlicht-SVN/lib/Linux" />
-			<Add directory="../libctb/libctb-0.16/lib" />
+			<Add directory="../libctb-0.16/lib" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Unit filename="processpil.c">
@@ -42,6 +43,9 @@
 		</Unit>
 		<Unit filename="syspil.h" />
 		<Unit filename="uploader.cpp" />
-		<Extensions />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
