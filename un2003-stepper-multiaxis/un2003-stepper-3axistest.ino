@@ -7,11 +7,18 @@
 ////////////////////////////////////////////////
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x38,A4,A5);
-//declare variables for the motor pins
-int motorPin1 = 0;    // IN 1
-int motorPin2 = 1;    // IN 2
-int motorPin3 = 2;   // In 3
-int motorPin4 = 3;   // IN 4
+//declare variables for the motor pins 
+int motorPin1 = 0;    
+int motorPin2 = 0;    
+int motorPin3 = 0;   
+int motorPin4 = 0;   
+//leave as 0
+
+static int motor1Pins[]= {0,1,2,3};
+static int motor2Pins[]= {4,5,6,7};
+static int motor3Pins[]= {8,9,10,11};
+static int motor4Pins[]= {12,13,14,15};
+
 
 int motorSpeed = 1200;  //variable to set stepper speed
                         // Experiment with this; too small will not work.
@@ -25,10 +32,11 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 void setup() 
   {
   //declare the motor pins as outputs
-  //pinMode(motorPin1, OUTPUT);
-  //pinMode(motorPin2, OUTPUT);
-  //pinMode(motorPin3, OUTPUT);
-  //pinMode(motorPin4, OUTPUT);
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+  
 
     pe.pinMode(motorPin1, OUTPUT);
   pe.pinMode(motorPin2, OUTPUT);
@@ -57,31 +65,31 @@ void step(char dir,int motor) // direction is set with 1/-1
   
 switch(motor){
   case 0:
-    motorPin1 = 0;    // IN 1
-    motorPin2 = 1;    // IN 2
-    motorPin3 = 2;   // In 3
-    motorPin4 = 3;
+    motorPin1 = motor1Pins[0]
+    motorPin2 = motor1Pins[1];   
+    motorPin3 = motor1Pins[2];   
+    motorPin4 = motor1Pins[3];
     setOutput(mpos[motor]);
     break;  
   case 1:
-    motorPin1 = 4;    // IN 1
-    motorPin2 = 5;    // IN 2
-    motorPin3 = 6;   // In 3
-    motorPin4 = 7;
+    motorPin1 = motor2Pins[0]
+    motorPin2 = motor2Pins[1];   
+    motorPin3 = motor2Pins[2];   
+    motorPin4 = motor2Pins[3];
     setOutput(mpos[motor]);
     break;  
   case 2:
-    motorPin1 = 8;    // IN 1
-    motorPin2 = 9;    // IN 2
-    motorPin3 = 10;   // In 3
-    motorPin4 = 11;
+    motorPin1 = motor3Pins[0]
+    motorPin2 = motor3Pins[1];   
+    motorPin3 = motor3Pins[2];   
+    motorPin4 = motor3Pins[3];
       setOutput(mpos[motor]);
     break;  
   case 3: // i2c expander
-    motorPin1 = 0;    // IN 1
-    motorPin2 = 1;    // IN 2
-    motorPin3 = 2;   // In 3
-    motorPin4 = 3;
+    motorPin1 = motor4Pins[0]
+    motorPin2 = motor4Pins[1];   
+    motorPin3 = motor4Pins[2];   
+    motorPin4 = motor4Pins[3];
     setOutputpe(mpos[motor]);
     break;  
   }
