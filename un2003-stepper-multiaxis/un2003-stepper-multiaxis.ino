@@ -154,6 +154,14 @@ void setmotor(int motor){
     setOutputpe(mpos[motor]);
       delayMicroseconds(motorSpeed);
     break;  
+  case 4: // i2c expander
+    motorPin1 = motor4Pins[0];
+    motorPin2 = motor4Pins[1];   
+    motorPin3 = motor4Pins[2];   
+    motorPin4 = motor4Pins[3];
+    setOutputpe(mpos[motor]);
+      delayMicroseconds(motorSpeed);
+    break;  
   }
   
 }
