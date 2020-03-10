@@ -26,8 +26,8 @@ int motorPin4 = 0;
 
 static char motor1Pins[]= {A0,A1,A2,A3};
 //static int motor1Pins[]= {0,1,2,3};
-static int motor2Pins[]= {4,5,6,7};
-static int motor3Pins[]= {8,9,10,11};
+static int motor2Pins[]= {13,12,11,10};
+static int motor3Pins[]= {9,8,7,6};
 
 // i2c motors
 static int motor4Pins[]= {0,1,2,3};
@@ -86,10 +86,23 @@ void setup()
 
 void loop()
   {
+    
     for (int i=0; i < countsperrev;i++){
-      step(-1,3); // direction and motor  -- not moving in negative direction yet
+      step(1,2); // direction and motor  -- not moving in negative direction yet
       //anticlockwise();
     }
+
+    for (int i=0; i < countsperrev;i++){
+
+         step(1,0);
+    }
+    
+    for (int i=0; i < countsperrev;i++){
+
+     step(-1,1);
+
+    }
+     
   }
 
   void anticlockwise() // testing function for torque and speed
@@ -120,7 +133,24 @@ void step(char dir,int motor) // direction is set with 1/-1
 
 
 void setmotor(int motor){
+
+
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
+
+  #ifdef EXPANDER // expander can hold 2 extra stepper motors
+
+
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
   
+#endif
+
+
   switch(motor){
   case 0:
     motorPin1 = motor1Pins[0];
