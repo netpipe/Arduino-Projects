@@ -141,6 +141,17 @@ J;
 
 void setmotor(int motor){
   
+      digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
+    #ifdef EXPANDER // expander can hold 2 extra stepper motors
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+  #endif
+  
   switch(motor){
   case 0:
     motorPin1 = motor1Pins[0];

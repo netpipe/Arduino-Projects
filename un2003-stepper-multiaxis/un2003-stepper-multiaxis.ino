@@ -36,7 +36,7 @@ static int motor5Pins[]= {4,5,6,7};
 int motorSpeed = 1200;  //variable to set stepper speed
                         // Experiment with this; too small will not work.
 int count = 0;          // count of steps made
-int countsperrev = 560; // number of steps per revolution for this motor
+int countsperrev = 530*8; // number of steps per revolution for this motor
 
 int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
 
@@ -86,7 +86,7 @@ void setup()
 
 void loop()
   {
-    
+   
     for (int i=0; i < countsperrev;i++){
       step(1,2); // direction and motor  -- not moving in negative direction yet
       //anticlockwise();
