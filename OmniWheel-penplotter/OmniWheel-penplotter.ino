@@ -42,17 +42,12 @@ int motorPin4 = 0;
 
 static char motor1Pins[]= {A0,A1,A2,A3};
 //static int motor1Pins[]= {0,1,2,3};
-static int motor2Pins[]= {4,5,6,7};
-static int motor3Pins[]= {8,9,10,11};
+static int motor2Pins[]= {13,12,11,10};
+static int motor3Pins[]= {9,8,7,6};
 
 // i2c motors
 static int motor4Pins[]= {0,1,2,3};
 static int motor5Pins[]= {4,5,6,7};
-
-int motorSpeed = 1200;  //variable to set stepper speed use ramping to make faster todo
-                        // Experiment with this; too small will not turn the motors.
-int count = 0;          // count of steps made
-int countsperrev = 560; // number of steps per revolution for this motor
 
 int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
 
@@ -77,7 +72,7 @@ int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001}
 
 // ----- motor definitions
 //#define STEPS_PER_MM 200*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
-#define STEPS_PER_MM 570*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
+#define STEPS_PER_MM 530*8/(58*PI)   //200steps/rev; 8 x microstepping; 58mm dia. wheels
 #define NUDGE STEPS_PER_MM*5          //move pen 5mm (change number to suit)
 #define STEP1 13                      //arduino ports
 #define STEP2 11
@@ -93,9 +88,8 @@ bool DIR1;                          // Wheel W1
 bool DIR2;                          // Wheel W2
 bool DIR3;                          // Wheel W3
 
-long
-PULSE_WIDTH = 2,                    //easydriver step pulse-width (uS)
-DELAY = 1000;                       //delay (uS) between motor steps (controls speed)
+long PULSE_WIDTH = 2,                    //easydriver step pulse-width (uS)
+DELAY = 1200;                       //delay (uS) between motor steps (controls speed)
 
 // ----- plotter definitions
 #define BAUD 9600
@@ -159,7 +153,7 @@ void setmotor(int motor){
     motorPin3 = motor1Pins[2];   
     motorPin4 = motor1Pins[3];
     setOutput(mpos[motor]);
-      delayMicroseconds(motorSpeed);
+      delayMicroseconds(DELAY);
     break;  
   case 1:
     motorPin1 = motor2Pins[0];
@@ -167,7 +161,7 @@ void setmotor(int motor){
     motorPin3 = motor2Pins[2];   
     motorPin4 = motor2Pins[3];
     setOutput(mpos[motor]);
-      delayMicroseconds(motorSpeed);
+      delayMicroseconds(DELAY);
     break;  
   case 2:
     motorPin1 = motor3Pins[0];
@@ -175,7 +169,7 @@ void setmotor(int motor){
     motorPin3 = motor3Pins[2];   
     motorPin4 = motor3Pins[3];
     setOutput(mpos[motor]);
-      delayMicroseconds(motorSpeed);
+      delayMicroseconds(DELAY);
     break;  
   case 3: // i2c expander
     motorPin1 = motor4Pins[0];
@@ -183,7 +177,7 @@ void setmotor(int motor){
     motorPin3 = motor4Pins[2];   
     motorPin4 = motor4Pins[3];
     setOutputpe(mpos[motor]);
-      delayMicroseconds(motorSpeed);
+      delayMicroseconds(DELAY);
     break;  
       case 4: // i2c expander
     motorPin1 = motor4Pins[0];
@@ -191,7 +185,7 @@ void setmotor(int motor){
     motorPin3 = motor4Pins[2];   
     motorPin4 = motor4Pins[3];
     setOutputpe(mpos[motor]);
-      delayMicroseconds(motorSpeed);
+      delayMicroseconds(DELAY);
     break;  
   }
   
@@ -314,11 +308,14 @@ void setup()
 
 void step(char dir,int motor) // direction is set with 1/-1
 {
-  mpos[motor] = (mpos[motor] + dir) % 8;
-   //   if(mpos[motor]<0)
-   // {
-  //       mpos[motor]=-mpos[motor];
-  //  }
+
+  mpos[motor] = mpos[motor] + dir;
+if (mpos[motor] < 0)
+mpos[motor] += 8;
+mpos[motor] %= 8;
+
+  //mpos[motor] = (mpos[motor] + dir) % 8;
+ 
  //   Serial.println("motor position");
  // Serial.println(mpos[motor]);
   
