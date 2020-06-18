@@ -90,16 +90,21 @@ void loop()
     for (int i=0; i < countsperrev;i++){
       step(1,2); // direction and motor  -- not moving in negative direction yet
       //anticlockwise();
+      delay(0.4);
+      step(1,0);
+      delay(0.4);
+      //step(1,1);
+      //delay(0.4);
     }
 
     for (int i=0; i < countsperrev;i++){
 
-         step(1,0);
+   //      step(1,0);
     }
     
     for (int i=0; i < countsperrev;i++){
 
-     step(-1,1);
+   //  step(-1,1);
 
     }
      
@@ -127,11 +132,28 @@ void step(char dir,int motor) // direction is set with 1/-1
   
   setmotor(motor);
   //mpos[motor] = (mpos[motor] + dir);
-
+setoff();
 }
 
 
+void setoff(){
 
+
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
+
+  #ifdef EXPANDER // expander can hold 2 extra stepper motors
+
+
+  pe.digitalWrite(motorPin1, LOW);
+  pe.digitalWrite(motorPin2, LOW);
+  pe.digitalWrite(motorPin3, LOW);
+  pe.digitalWrite(motorPin4, LOW);
+  
+#endif
+}
 void setmotor(int motor){
 
 
