@@ -11,6 +11,8 @@
    
 */
 
+//uses blue microphone module from ebay.
+
 const int OUT_PIN = 8;
 const int SAMPLE_TIME = 100;
 unsigned long millisCurrent;
