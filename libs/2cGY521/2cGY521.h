@@ -33,8 +33,9 @@
 
 class GY521
 {
+	
 public:
-  GY521(uint8_t address = 0x69); // 0x68 or 0x69
+  GY521(uint8_t address = 0x68); // 0x68 or 0x69
   
  int sda;
  int scl;

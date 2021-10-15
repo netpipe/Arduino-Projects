@@ -5,7 +5,7 @@
 // PURPOSE: demo PRY
 //    DATE: 2020-08-06
 
-#include "GY521.h"
+#include "2cGY521.h"
 
 GY521 sensor(0x69);
 
@@ -18,7 +18,7 @@ void setup()
 
   //Wire.begin();
 
-  sensor.begin(4,5)
+  sensor.begin(A4,A5);
 
   delay(100);
   while (sensor.wakeup() == false)
@@ -64,6 +64,7 @@ void loop()
   Serial.println();
 
   counter++;
+  delay(100);
 }
 
 // -- END OF FILE --

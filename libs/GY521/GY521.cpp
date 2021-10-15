@@ -18,7 +18,8 @@
 //                      add GY521_registers.h
 //  0.2.3   2021-01-26  align version numbers (oops)
 //
-
+//  0.3.3   2021-07-05  fix #22 improve maths
+ //  0.3.0   2021-04-07  fix #18 acceleration error correction (kudo's to Merkxic)
 
 #include "GY521.h"
 
@@ -28,7 +29,8 @@
 #define GY521_WAKEUP                 0x00
 
 #define RAD2DEGREES                 (180.0 / PI)
-
+#define RAW2DPS_FACTOR              (1.0 / 131.0)
+#define RAW2G_FACTOR                (1.0 / 16384.0)
 
 /////////////////////////////////////////////////////
 //
@@ -48,7 +50,7 @@ bool GY521::begin(uint8_t sda, uint8_t scl)
 }
 #endif
 
-bool GY521::begin(int sda,int scl)
+bool GY521::begin(uint8_t sda,uint8_t scl)
 {
   SWire.begin(sda, scl);
   return isConnected();
@@ -70,14 +72,15 @@ bool GY521::wakeup()
 
 int16_t GY521::read()
 {
+	  uint32_t now = millis();
   if (_throttle)
   {
-    if ((millis() - _lastTime) < _throttleTime)
+     if ((now - _lastTime) < _throttleTime)
     {
       return GY521_THROTTLED;
     }
   }
-
+_lastTime = now;
   // Connected ?
   SWire.beginTransmission(_address);
   SWire.write(GY521_ACCEL_XOUT_H);
@@ -98,8 +101,8 @@ int16_t GY521::read()
   _gz = _WireRead2();  // GYRO_ZOUT_H   GYRO_ZOUT_L
 
   // time interval
-  uint32_t now = millis();
-  float duration = (now - _lastTime) * 0.001;   // time in seconds.
+  now = micros();
+  float duration = (now - _lastMicros) * 1e-6;   // time in seconds.
   _lastTime = now;
 
   // Convert raw acceleration to g's
@@ -107,15 +110,23 @@ int16_t GY521::read()
   _ay *= _raw2g;
   _az *= _raw2g;
 
+  // Error correct raw acceleration (in g) measurements  // #18 kudos to Merkxic
+  _ax += axe;
+  _ay += aye;
+  _az += aze;
+  
   // prepare for Pitch Roll Yaw
-  _aax = atan(_ay / hypot(_ax, _az)) * RAD2DEGREES;
-  _aay = atan(-1.0 * _ax / hypot(_ay, _az)) * RAD2DEGREES;
-  _aaz = atan(_az / hypot(_ax, _ay)) * RAD2DEGREES;
+  float _ax2 = _ax * _ax;
+  float _ay2 = _ay * _ay;
+  float _az2 = _az * _az;
 
-  // Error correct the angles
-  _aax += axe;
-  _aay += aye;
-  _aaz += aze;
+  _aax = atan(       _ay / sqrt(_ax2 + _az2)) * RAD2DEGREES;
+  _aay = atan(-1.0 * _ax / sqrt(_ay2 + _az2)) * RAD2DEGREES;
+  _aaz = atan(       _az / sqrt(_ax2 + _ay2)) * RAD2DEGREES;
+  // optimize #22
+  // _aax = atan(_ay / hypot(_ax, _az)) * RAD2DEGREES;
+  // _aay = atan(-1.0 * _ax / hypot(_ay, _az)) * RAD2DEGREES;
+  // _aaz = atan(_az / hypot(_ax, _ay)) * RAD2DEGREES;
 
   // Convert to Celsius
   _temperature = _temperature * 0.00294117647 + 36.53;  //  == /340.0  + 36.53;
@@ -196,7 +207,7 @@ bool GY521::setGyroSensitivity(uint8_t gs)
     }
   }
   // calculate conversion factor.
-  _raw2dps = (1 << _gfs) / 131.0;
+  _raw2dps = (1 << _gfs) * RAW2DPS_FACTOR;
   return true;
 }
 
