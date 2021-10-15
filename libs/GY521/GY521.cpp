@@ -20,7 +20,8 @@
 //
 //  0.3.3   2021-07-05  fix #22 improve maths
  //  0.3.0   2021-04-07  fix #18 acceleration error correction (kudo's to Merkxic)
-
+ //  0.3.1   2021-06-13  added more unit test + some initialization
+ // - **void reset()** set all internal values to 0 and throttle time to 10 ms.
 #include "GY521.h"
 
 // keep register names in sync with BIG MPU6050 lib
@@ -40,6 +41,7 @@ GY521::GY521(uint8_t address)
 {
   _address = address;
   setThrottleTime(GY521_THROTTLE_TIME);
+  reset();
 }
 
 #if defined (ESP8266) || defined(ESP32)
@@ -60,6 +62,18 @@ bool GY521::isConnected()
 {
   SWire.beginTransmission(_address);
   return (SWire.endTransmission() == 0);
+}
+
+void GY521::reset()
+{
+  setThrottleTime(GY521_THROTTLE_TIME);
+
+  _ax  = _ay  = _az  = 0;
+  _aax = _aay = _aaz = 0;
+  _gx  = _gy  = _gz  = 0;
+  _pitch = 0;
+  _roll  = 0;
+  _yaw   = 0;
 }
 
 bool GY521::wakeup()

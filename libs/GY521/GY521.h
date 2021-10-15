@@ -44,7 +44,7 @@ public:
 #endif
   bool     begin(uint8_t,uint8_t);
   bool     isConnected();
-
+  void     reset();
   bool     wakeup();
   // throttle to force delay between reads.
   void     setThrottle(bool throttle = true) { _throttle = throttle; };
