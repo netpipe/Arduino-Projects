@@ -22,7 +22,7 @@
  //  0.3.0   2021-04-07  fix #18 acceleration error correction (kudo's to Merkxic)
  //  0.3.1   2021-06-13  added more unit test + some initialization
  // - **void reset()** set all internal values to 0 and throttle time to 10 ms.
-#include "GY521.h"
+#include "nGY521.h"
 
 // keep register names in sync with BIG MPU6050 lib
 #include "GY521_registers.h"
@@ -40,7 +40,7 @@
 GY521::GY521(uint8_t address)
 {
   _address = address;
-  setThrottleTime(GY521_THROTTLE_TIME);
+ // setThrottleTime(GY521_THROTTLE_TIME);
   reset();
 }
 
@@ -86,23 +86,33 @@ bool GY521::wakeup()
 
 int16_t GY521::read()
 {
-	  uint32_t now = millis();
+  //uint32_t now = millis();
   if (_throttle)
   {
-     if ((now - _lastTime) < _throttleTime)
+    if ((millis() - _lastTime) < _throttleTime)
     {
+      // not an error.
       return GY521_THROTTLED;
     }
   }
-_lastTime = now;
+//  _lastTime = now;
+
   // Connected ?
   SWire.beginTransmission(_address);
   SWire.write(GY521_ACCEL_XOUT_H);
-  if (SWire.endTransmission() != 0) return GY521_ERROR_WRITE;
+  if (SWire.endTransmission() != 0)
+  {
+    _error = GY521_ERROR_WRITE;
+    return _error;
+  }
 
   // Get the data
   int8_t n = SWire.requestFrom(_address, (uint8_t)14);
-  if (n != 14) return GY521_ERROR_READ;
+  if (n != 14)
+  {
+    _error = GY521_ERROR_READ;
+    return _error;
+  }
   // ACCELEROMETER
   _ax = _WireRead2();  // ACCEL_XOUT_H  ACCEL_XOUT_L
   _ay = _WireRead2();  // ACCEL_YOUT_H  ACCEL_YOUT_L
@@ -114,10 +124,14 @@ _lastTime = now;
   _gy = _WireRead2();  // GYRO_YOUT_H   GYRO_YOUT_L
   _gz = _WireRead2();  // GYRO_ZOUT_H   GYRO_ZOUT_L
 
-  // time interval
-  now = micros();
-  float duration = (now - _lastMicros) * 1e-6;   // time in seconds.
+  // duration interval
+  uint32_t now = millis();
+  float duration = (now - _lastTime) * 1e-6;   // time in seconds.
   _lastTime = now;
+
+
+
+  // next lines might be merged per axis.
 
   // Convert raw acceleration to g's
   _ax *= _raw2g;
@@ -128,7 +142,7 @@ _lastTime = now;
   _ax += axe;
   _ay += aye;
   _az += aze;
-  
+
   // prepare for Pitch Roll Yaw
   float _ax2 = _ax * _ax;
   float _ay2 = _ay * _ay;
@@ -149,19 +163,19 @@ _lastTime = now;
   _gx *= _raw2dps;
   _gy *= _raw2dps;
   _gz *= _raw2dps;
-  
+
   // Error correct raw gyro measurements.
   _gx += gxe;
   _gy += gye;
   _gz += gze;
-  
+
   _gax += _gx * duration;
   _gay += _gy * duration;
   _gaz += _gz * duration;
 
-  _yaw = _gaz;
+  _yaw   = _gaz;
   _pitch = 0.96 * _gay + 0.04 * _aay;
-  _roll = 0.96 * _gax + 0.04 * _aax;
+  _roll  = 0.96 * _gax + 0.04 * _aax;
 
   return GY521_OK;
 }
@@ -185,20 +199,9 @@ bool GY521::setAccelSensitivity(uint8_t as)
       return false;
     }
   }
-  // calculate conversion factor.
-  _raw2g = (1 << _afs) / 16384.0;
+  // calculate conversion factor.  // 4 possible values => lookup table?
+  _raw2g = (1 << _afs) * RAW2G_FACTOR;
   return true;
-}
-
-uint8_t GY521::getAccelSensitivity()
-{
-  uint8_t val = getRegister(GY521_ACCEL_CONFIG);
-  if (_error != GY521_OK)
-  {
-    return _error; // return and propagate error (best thing to do)
-  }
-  _afs = (val >> 3) & 3;
-  return _afs;
 }
 
 bool GY521::setGyroSensitivity(uint8_t gs)
@@ -220,9 +223,20 @@ bool GY521::setGyroSensitivity(uint8_t gs)
       return false;
     }
   }
-  // calculate conversion factor.
+  // calculate conversion factor..  // 4 possible values => lookup table?
   _raw2dps = (1 << _gfs) * RAW2DPS_FACTOR;
   return true;
+}
+
+uint8_t GY521::getAccelSensitivity()
+{
+  uint8_t val = getRegister(GY521_ACCEL_CONFIG);
+  if (_error != GY521_OK)
+  {
+    return _error; // return and propagate error (best thing to do)
+  }
+  _afs = (val >> 3) & 3;
+  return _afs;
 }
 
 uint8_t GY521::getGyroSensitivity()

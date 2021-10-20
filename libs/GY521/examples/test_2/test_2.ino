@@ -7,7 +7,7 @@
 
 #include "GY521.h"
 
-GY521 sensor(0x69);
+GY521 sensor(0x68);
 
 void setup()
 {
@@ -16,7 +16,7 @@ void setup()
 
   //Wire.begin();
 
-  sensor.begin(4,5)
+  sensor.begin(A4,A5);
 
   delay(100);
   if (sensor.wakeup() == false)
