@@ -182,7 +182,7 @@ if ( count > 180 ){
     display.print(DHT.humidity);
 #endif
 
-  
+  //if time = 0:00 then get eeprom time
   TimeVar storedTime;
   EEPROM.get(0, storedTime);
   if (storedTime != defaultTime)
