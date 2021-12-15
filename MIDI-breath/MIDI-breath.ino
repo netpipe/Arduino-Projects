@@ -22,7 +22,7 @@ byte note = 0;
 int samplebuffer = 0;
 
 const int sampleWindow = 28; // Sample window width in mS (50 mS = 20Hz)
-const int threshold1 = 26000;    // 350 higher value for larger sample window
+const int threshold1 = 26400;    // 350 higher value for larger sample window
 const int threshold2 = 27000;
 //const int threshold4 = 140; 
 const int threshold3 = 28000; //rename to 4 after
@@ -96,7 +96,7 @@ void loop() {
     samplebuffer += bmp.readPressure();
     elapsedmilis = millis() - startMillis;
   }
-  elapsedmilis=0;
+
    //first drum loop
   if (samplebuffer > 0) {
     Serial.println(samplebuffer);
@@ -189,7 +189,9 @@ void loop() {
   //  Serial.print("Real altitude = ");
   //  Serial.print(bmp.readAltitude(104000)); //local is 1040 milibar x 100 = pascals//101500
  //   Serial.println(" meters");
-    
+   elapsedmilis=0;
+      samplebuffer = 0;
+      
    // Serial.println();
     delay(10);
 }
