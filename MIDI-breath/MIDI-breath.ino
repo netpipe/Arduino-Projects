@@ -115,53 +115,53 @@ void loop() {
     }
 
     Serial.println(hits);
-//         switch (hits) {
-//      case 2: {
-//          //noteOn(0x90, note, 127);
-//          #ifdef debug
-//          Serial.println("hit2");
-//          PrintCount();
-//         #endif
-//         #ifdef PLAY
-//          //            delay(3003);
-//          note = 0x4E;
-//          noteOn(0x90, note, 0x45);
-//          delay(10);
-//          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-//          noteOn(0x90, note, 0x00);
-//          #endif
-//          
-//        }break;
-//      case 1: {
-//        #ifdef debug
-//          Serial.println("hit1");
-//          #endif
-//          PrintCount();
-//         #ifdef PLAY
-//            //  for (int note = 0x1E; note < 0x5A; note ++) {
-//            note = 0x5E;
-//            noteOn(0x90, note, 0x45);
-//            delay(10);
-//            //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-//            noteOn(0x90, note, 0x00);
-//           #endif 
-//          
-//        }break;
-//      case 0: {
-//        #ifdef debug
-//            Serial.println("hit0");
-//            PrintCount();
-//          #endif
-//         #ifdef PLAY
-//          noteOn(0x90, note, 0x45);
-//          delay(10);
-//          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-//          noteOn(0x90, note, 0x00);
-//      //    delay(10);
-//        #endif
-//       
-//        }   break;
-//    }
+         switch (hits) {
+      case 2: {
+          //noteOn(0x90, note, 127);
+          #ifdef debug
+          Serial.println("hit2");
+          PrintCount();
+         #endif
+         #ifdef PLAY
+          //            delay(3003);
+          note = 0x4E;
+          noteOn(0x90, note, 0x45);
+          delay(10);
+          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
+          noteOn(0x90, note, 0x00);
+          #endif
+          
+        }break;
+      case 1: {
+        #ifdef debug
+          Serial.println("hit1");
+          #endif
+          PrintCount();
+         #ifdef PLAY
+            //  for (int note = 0x1E; note < 0x5A; note ++) {
+            note = 0x5E;
+            noteOn(0x90, note, 0x45);
+            delay(10);
+            //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
+            noteOn(0x90, note, 0x00);
+           #endif 
+          
+        }break;
+      case 0: {
+        #ifdef debug
+            Serial.println("hit0");
+            PrintCount();
+          #endif
+         #ifdef PLAY
+          noteOn(0x90, note, 0x45);
+          delay(10);
+          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
+          noteOn(0x90, note, 0x00);
+      //    delay(10);
+        #endif
+       
+        }   break;
+    }
   }
 
    // Serial.print("Temperature = ");
@@ -192,4 +192,32 @@ void loop() {
     
    // Serial.println();
     delay(10);
+}
+
+ void noteOn(byte cmd, byte pitch, byte velocity) {
+   /* First parameter is the event type (top 4 bits of the command byte).
+      Second parameter is command byte combined with the channel.
+      Third parameter is the first data byte
+      Fourth parameter second data byte, if there is one:
+  */
+  #ifdef USBHID
+    midiEventPacket_t midiMsg = {cmd >> 4, cmd, pitch, velocity};
+    MidiUSB.sendMIDI(midiMsg);
+   MidiUSB.flush();
+   
+   #ifdef debug
+    //prints the values in the serial monitor so we can see what note we're playing
+//    Serial.print("cmd: ");
+//    Serial.print(cmd);
+//    Serial.print(", data1: ");
+//    Serial.print(data1);
+//    Serial.print(", data2: ");
+//    Serial.println(data2);
+   #endif
+   
+  #else
+    Serial.write( cmd );
+    Serial.write( pitch );
+    Serial.write( velocity );
+  #endif
 }
