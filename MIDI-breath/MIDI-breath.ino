@@ -3,6 +3,8 @@
     #include "MIDIUSB.h"
 #endif
 
+#define PLAY
+
 int hits;
 unsigned long startMillis;
 long elapsedmilis = 0;
@@ -125,10 +127,7 @@ void loop() {
          #ifdef PLAY
           //            delay(3003);
           note = 0x4E;
-          noteOn(0x90, note, 0x45);
-          delay(10);
-          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-          noteOn(0x90, note, 0x00);
+          noteOn(0x9A, 0x02, 0x45);
           #endif
           
         }break;
@@ -138,12 +137,7 @@ void loop() {
           #endif
           PrintCount();
          #ifdef PLAY
-            //  for (int note = 0x1E; note < 0x5A; note ++) {
-            note = 0x5E;
-            noteOn(0x90, note, 0x45);
-            delay(10);
-            //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-            noteOn(0x90, note, 0x00);
+            noteOn(0x9A, 0x01, 0x45);
            #endif 
           
         }break;
@@ -153,11 +147,7 @@ void loop() {
             PrintCount();
           #endif
          #ifdef PLAY
-          noteOn(0x90, note, 0x45);
-          delay(10);
-          //Note on channel 1 (0x90), some note value (note), silent velocity (0x00):
-          noteOn(0x90, note, 0x00);
-      //    delay(10);
+          noteOn(0x9A, 0x00, 0x45);
         #endif
        
         }   break;
