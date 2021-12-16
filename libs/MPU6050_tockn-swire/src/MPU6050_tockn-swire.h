@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "SWire.h"
 
-#define MPU6050_ADDR         0x68
+#define MPU6050_ADDR2         0x68
 #define MPU6050_SMPLRT_DIV   0x19
 #define MPU6050_CONFIG       0x1a
 #define MPU6050_GYRO_CONFIG  0x1b
@@ -19,8 +19,8 @@ class MPU6050{
 
   MPU6050();
   MPU6050(float aC, float gC);
-
-  void begin(int sda,int scl);
+	int MPU6050_ADDR=MPU6050_ADDR2;
+  void begin(int sda,int scl,int);
 
   void setGyroOffsets(float x, float y, float z);
 

@@ -14,8 +14,13 @@ MPU6050::MPU6050(float aC, float gC){
   gyroCoef = gC;
 }
 
-void MPU6050::begin(int sda,int scl){
-	SWire.begin(sda,scl);
+void MPU6050::begin(int sda1,int scl1,int addr){
+if (addr == 1){
+MPU6050_ADDR=0x68;
+}else{
+MPU6050_ADDR=0x69;
+}
+  SWire.begin(sda1,scl1);
   writeMPU6050(MPU6050_SMPLRT_DIV, 0x00);
   writeMPU6050(MPU6050_CONFIG, 0x00);
   writeMPU6050(MPU6050_GYRO_CONFIG, 0x08);
