@@ -1,3 +1,7 @@
+// v2 MIDI breath controller -- with GYRO and microphone support
+
+
+// needs leonardo or something with HID support to work properly
 #define USBHID
 #ifdef USBHID
     #include "MIDIUSB.h"
@@ -5,6 +9,7 @@
 
 #define PLAY
 //#define debug1
+#define PRINTS
 
 byte note = 0;
 int hits;
@@ -64,10 +69,10 @@ void setup() {
 }
 
 void PrintCount(){
-
+#ifdef PRINTS
            count++;
          Serial.println(count);
-         
+         #endif
 }
   
 void loop() {
@@ -89,8 +94,9 @@ void loop() {
 
    //first drum loop
   if (samplebuffer > 0) {
+    #ifdef PRINTS
     Serial.println(samplebuffer);
-
+    #endif
     if (samplebuffer >= threshold1)
     {
       hits = 0;
@@ -154,7 +160,7 @@ void loop() {
   mpu6050.update();
 
 //  if(millis() - timer > 1000){
-    
+    #ifdef PRINTS
     Serial.println("=======================================================");
     Serial.print("temp : ");Serial.println(mpu6050.getTemp());
     Serial.print("accX : ");Serial.print(mpu6050.getAccX());
@@ -177,7 +183,7 @@ void loop() {
     Serial.print("\tangleZ : ");Serial.println(mpu6050.getAngleZ());
     Serial.println("=======================================================\n");
  //   timer = millis();
-    
+    #endif
 //  }
 #endif
 
@@ -235,8 +241,10 @@ void loop() {
    #endif
    
   #else
+  #ifdef PRINTS
     Serial.write( cmd );
     Serial.write( pitch );
     Serial.write( velocity );
+    #endif
   #endif
 }
