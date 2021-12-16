@@ -4,14 +4,14 @@
 #endif
 
 #define PLAY
-#define debug1
+//#define debug1
 
 byte note = 0;
 int hits;
 unsigned long startMillis;
 long elapsedmilis = 0;
 
-const int OUT_PIN = 3;
+const int OUT_PIN = 3; // digital pin for microphone.
 
 #ifdef memory
 #include <EEPROM.h>
@@ -48,10 +48,9 @@ void setup() {
   //Wire.begin(4,5);
    #ifdef USBHID
     Serial.begin(9600);
-              #else
+   #else
     Serial.begin(31250);
-    #endif
-  //   Serial.begin(9600);
+   #endif
 
 #ifdef GYRO
   mpu6050.begin(A2,A3,1);
