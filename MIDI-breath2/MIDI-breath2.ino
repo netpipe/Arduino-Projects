@@ -1,12 +1,17 @@
-// has microphone hum / shout support
-// gyroscope for head tilt
-// bmp180 sensor for pressure readings
-
-
-//#define USBHID
+#define USBHID
 #ifdef USBHID
     #include "MIDIUSB.h"
 #endif
+
+#define PLAY
+#define debug1
+
+byte note = 0;
+int hits;
+unsigned long startMillis;
+long elapsedmilis = 0;
+
+const int OUT_PIN = 3;
 
 #ifdef memory
 #include <EEPROM.h>
@@ -14,30 +19,19 @@ int addr = 0;
 #endif
 
 
-#define PLAY
-
-int hits;
-unsigned long startMillis;
-long elapsedmilis = 0;
-
-const int OUT_PIN = 3; // microphone pwm pin for sampling loudness
-
-
-byte note = 0;
-
 #define MIDI_ON 144
 #define MIDI_OFF 128
 
 int samplebuffer = 0;
-int samplebuffer2 = 0;
+
 const int sampleWindow = 28; // Sample window width in mS (50 mS = 20Hz)
-const int threshold1 = 26400;    // 350 higher value for larger sample window
+const int threshold1 = 26800;    // 350 higher value for larger sample window
 const int threshold2 = 27000;
 //const int threshold4 = 140; 
 const int threshold3 = 28000; //rename to 4 after
 int count = 0;
 
-#define GYRO
+//#define GYRO
 #ifdef GYRO
 #include <MPU6050_tockn-swire.h>
 MPU6050 mpu6050;
@@ -45,7 +39,6 @@ MPU6050 mpu6050;
 
 #include <SWire.h>
 #include <Adafruit_BMP085-swire.h>
-
 
 Adafruit_BMP085 bmp;
   
@@ -56,16 +49,16 @@ void setup() {
    #ifdef USBHID
     Serial.begin(9600);
               #else
-   // Serial.begin(31250);
+    Serial.begin(31250);
     #endif
-     Serial.begin(9600);
+  //   Serial.begin(9600);
 
 #ifdef GYRO
-  mpu6050.begin(A4,A5,1);
+  mpu6050.begin(A2,A3,1);
   mpu6050.calcGyroOffsets(true);
 #endif
 
-  if (!bmp.begin(3,A4,A5)) {
+  if (!bmp.begin(3,A2,A3)) {
 	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
 	//while (1) {}
   }
@@ -87,9 +80,9 @@ void loop() {
 
   while (elapsedmilis < sampleWindow)
   {
-    if (digitalRead(OUT_PIN) < 1) { // microphone
-      samplebuffer2++;
-    }
+    //if (digitalRead(OUT_PIN) < 1) { //microphone input
+    //  samplebuffer++;
+   // }
    
     samplebuffer += bmp.readPressure();
     elapsedmilis = millis() - startMillis;
@@ -116,37 +109,45 @@ void loop() {
          switch (hits) {
       case 2: {
           //noteOn(0x90, note, 127);
-          #ifdef debug
+          #ifdef debug1
           Serial.println("hit2");
           PrintCount();
          #endif
          #ifdef PLAY
           //            delay(3003);
-          note = 0x4E;
-          noteOn(0x9A, 0x02, 0x45);
+          note = 0x7;
+          noteOn(0xB0,note, 0x127);
+         // delay(10);
+          //noteOn(0x90, note, 0x00);
           #endif
-          
-        }break;
+          break;
+        }
       case 1: {
-        #ifdef debug
+        #ifdef debug1
           Serial.println("hit1");
           #endif
           PrintCount();
          #ifdef PLAY
-            noteOn(0x9A, 0x01, 0x45);
+         note = 0x7;
+            noteOn(0xB0, note, 0x85);
+         //   delay(10);
+         //   noteOn(0x90, note, 0x00);
            #endif 
-          
-        }break;
+          break;
+        }
       case 0: {
-        #ifdef debug
+        #ifdef debug1
             Serial.println("hit0");
             PrintCount();
           #endif
          #ifdef PLAY
-          noteOn(0x9A, 0x00, 0x45);
+          note = 0x7;
+          noteOn(0xB0, note, 0x40);
+         // delay(10);
+         // noteOn(0x90, note, 0x00);
         #endif
-       
-        }   break;
+        break;
+        }  
     }
   }
 
@@ -208,7 +209,6 @@ void loop() {
  //   Serial.println(" meters");
    elapsedmilis=0;
       samplebuffer = 0;
-samplebuffer2= 0;
       
    // Serial.println();
     delay(10);

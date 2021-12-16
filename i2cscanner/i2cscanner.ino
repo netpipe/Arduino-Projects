@@ -34,7 +34,7 @@
     {
     //  SWire.begin(6,7);
         //    SWire.begin(4,5);
-            SWire.begin(A4,A5);    
+            SWire.begin(A2,A3);    
    //      SWire.begin(SDA,SCL);
       Serial.begin(9600);
       while (!Serial);             // Leonardo: wait for serial monitor
