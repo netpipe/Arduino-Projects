@@ -115,7 +115,7 @@ void loop() {
         }
       }
     }
-
+   note = 0x4E;
     Serial.println(hits);
          switch (hits) {
       case 2: {
@@ -126,8 +126,8 @@ void loop() {
          #endif
          #ifdef PLAY
           //            delay(3003);
-          note = 0x4E;
-          noteOn(0x9A, 0x02, 0x45);
+       
+          noteOn(0xB0, note, 0x127);
           #endif
           
         }break;
@@ -137,7 +137,7 @@ void loop() {
           #endif
           PrintCount();
          #ifdef PLAY
-            noteOn(0x9A, 0x01, 0x45);
+            noteOn(0xB0, note, 0x100);
            #endif 
           
         }break;
@@ -147,7 +147,7 @@ void loop() {
             PrintCount();
           #endif
          #ifdef PLAY
-          noteOn(0x9A, 0x00, 0x45);
+          noteOn(0xB0, note, 0x45);
         #endif
        
         }   break;
