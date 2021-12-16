@@ -1,7 +1,18 @@
+// has microphone hum / shout support
+// gyroscope for head tilt
+// bmp180 sensor for pressure readings
+
+
 //#define USBHID
 #ifdef USBHID
     #include "MIDIUSB.h"
 #endif
+
+#ifdef memory
+#include <EEPROM.h>
+int addr = 0;
+#endif
+
 
 #define PLAY
 
@@ -9,12 +20,8 @@ int hits;
 unsigned long startMillis;
 long elapsedmilis = 0;
 
-const int OUT_PIN = 3;
+const int OUT_PIN = 3; // microphone pwm pin for sampling loudness
 
-#ifdef memory
-#include <EEPROM.h>
-int addr = 0;
-#endif
 
 byte note = 0;
 
@@ -22,7 +29,7 @@ byte note = 0;
 #define MIDI_OFF 128
 
 int samplebuffer = 0;
-
+int samplebuffer2 = 0;
 const int sampleWindow = 28; // Sample window width in mS (50 mS = 20Hz)
 const int threshold1 = 26400;    // 350 higher value for larger sample window
 const int threshold2 = 27000;
@@ -39,28 +46,6 @@ MPU6050 mpu6050;
 #include <SWire.h>
 #include <Adafruit_BMP085-swire.h>
 
-/*************************************************** 
-  This is an example for the BMP085 Barometric Pressure & Temp Sensor
-
-  Designed specifically to work with the Adafruit BMP085 Breakout 
-  ----> https://www.adafruit.com/products/391
-
-  These displays use I2C to communicate, 2 pins are required to  
-  interface
-  Adafruit invests time and resources providing this open source code, 
-  please support Adafruit and open-source hardware by purchasing 
-  products from Adafruit!
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.  
-  BSD license, all text above must be included in any redistribution
- ****************************************************/
-
-// Connect VCC of the BMP085 sensor to 3.3V (NOT 5.0V!)
-// Connect GND to Ground
-// Connect SCL to i2c clock - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 5
-// Connect SDA to i2c data - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 4
-// EOC is not used, it signifies an end of conversion
-// XCLR is a reset pin, also not used here
 
 Adafruit_BMP085 bmp;
   
@@ -102,9 +87,9 @@ void loop() {
 
   while (elapsedmilis < sampleWindow)
   {
-    //if (digitalRead(OUT_PIN) < 1) {
-    //  samplebuffer++;
-   // }
+    if (digitalRead(OUT_PIN) < 1) { // microphone
+      samplebuffer2++;
+    }
    
     samplebuffer += bmp.readPressure();
     elapsedmilis = millis() - startMillis;
@@ -223,6 +208,7 @@ void loop() {
  //   Serial.println(" meters");
    elapsedmilis=0;
       samplebuffer = 0;
+samplebuffer2= 0;
       
    // Serial.println();
     delay(10);
