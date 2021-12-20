@@ -1,0 +1,1 @@
+/usr/bin/c++       CMakeFiles/cutecom.dir/main.o CMakeFiles/cutecom.dir/qcppdialogimpl.o CMakeFiles/cutecom.dir/moc_qcppdialogimpl.o  -o cutecom -rdynamic -lQt3Support -lQtGui -lQtCore 

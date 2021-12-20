@@ -1,0 +1,102 @@
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTryCompileExec3444368772/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec3444368772.dir/build.make CMakeFiles/cmTryCompileExec3444368772.dir/build
+gmake[1]: Entering directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3444368772.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec3444368772.dir/CheckSymbolExists.cxx.o -c /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_WIN’ was not declared in this scope
+   return ((int*)(&Q_WS_WIN))[argc];
+                   ^
+CMakeFiles/cmTryCompileExec3444368772.dir/build.make:57: recipe for target 'CMakeFiles/cmTryCompileExec3444368772.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: *** [CMakeFiles/cmTryCompileExec3444368772.dir/CheckSymbolExists.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+Makefile:118: recipe for target 'cmTryCompileExec3444368772/fast' failed
+gmake: *** [cmTryCompileExec3444368772/fast] Error 2
+
+File /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTryCompileExec4155673708/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec4155673708.dir/build.make CMakeFiles/cmTryCompileExec4155673708.dir/build
+gmake[1]: Entering directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec4155673708.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec4155673708.dir/CheckSymbolExists.cxx.o -c /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_QWS’ was not declared in this scope
+   return ((int*)(&Q_WS_QWS))[argc];
+                   ^
+CMakeFiles/cmTryCompileExec4155673708.dir/build.make:57: recipe for target 'CMakeFiles/cmTryCompileExec4155673708.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: *** [CMakeFiles/cmTryCompileExec4155673708.dir/CheckSymbolExists.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+Makefile:118: recipe for target 'cmTryCompileExec4155673708/fast' failed
+gmake: *** [cmTryCompileExec4155673708/fast] Error 2
+
+File /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_MAC exist failed with the following output:
+Change Dir: /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTryCompileExec1039221009/fast"
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec1039221009.dir/build.make CMakeFiles/cmTryCompileExec1039221009.dir/build
+gmake[1]: Entering directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec1039221009.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec1039221009.dir/CheckSymbolExists.cxx.o -c /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_MAC’ was not declared in this scope
+   return ((int*)(&Q_WS_MAC))[argc];
+                   ^
+CMakeFiles/cmTryCompileExec1039221009.dir/build.make:57: recipe for target 'CMakeFiles/cmTryCompileExec1039221009.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: Leaving directory '/home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp'
+gmake[1]: *** [CMakeFiles/cmTryCompileExec1039221009.dir/CheckSymbolExists.cxx.o] Error 1
+Makefile:118: recipe for target 'cmTryCompileExec1039221009/fast' failed
+gmake: *** [cmTryCompileExec1039221009/fast] Error 2
+
+File /home/clayton/Desktop/cutecom-0.22.0/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_MAC
+  return ((int*)(&Q_WS_MAC))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

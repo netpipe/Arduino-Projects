@@ -1,0 +1,46 @@
+#include <Esplora.h>
+#include <TFT.h>
+#include <SPI.h>
+
+int prevSw1 = HIGH;
+int incomingByte = 0;
+String charsIn = "";
+char printout[20];  //max char to print: 20
+ 
+void setup() {
+  
+    EsploraTFT.begin();  
+    EsploraTFT.background(0,0,0);
+    EsploraTFT.stroke(255,255,255);  //preset stroke color
+     
+    //Setup Serial Port with baud rate of 9600
+    Serial.begin(9600);
+    
+    //indicate start
+    Esplora.writeRGB(255, 255, 255);
+    delay(250);
+    Esplora.writeRGB(0, 0, 0);
+    
+}
+ 
+void loop() {
+    int sw1 = Esplora.readButton(SWITCH_1);
+    if(sw1 != prevSw1){
+      if(sw1 == LOW){
+        Serial.println("Hello from Arduino Esplora");
+      }
+      prevSw1 = sw1;
+    }
+    
+    while (Serial.available()) {
+      char charRead = Serial.read();
+      charsIn.concat(charRead);
+    }
+    if(charsIn != ""){
+      Serial.println("How are you, " + charsIn);
+      charsIn.toCharArray(printout, 21);
+      EsploraTFT.background(0,0,0);
+      EsploraTFT.text(printout, 0, 10);
+      charsIn = "";
+    }
+}
