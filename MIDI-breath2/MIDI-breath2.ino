@@ -7,7 +7,7 @@
     #include "MIDIUSB.h"
 #endif
 
-#define GYRO
+//#define GYRO
 #define PLAY
 //#define debug1
 #define PRINTS
