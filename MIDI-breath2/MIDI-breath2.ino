@@ -76,7 +76,7 @@ void setup() {
 
 
 #ifdef DBMP280
-  if(!bmp280.init(A3,A2)){
+  if(!bmp280.init(A2,A3)){
     Serial.println("Device error!");
   }
 #endif
@@ -115,12 +115,14 @@ void loop() {
     samplebuffer += bmp.readPressure();
     #endif
     elapsedmilis = millis() - startMillis;
-  }
 
+  }
+      Serial.println(samplebuffer);
    //first drum loop
   if (samplebuffer > 0) {
     #ifdef PRINTS
-    Serial.println(samplebuffer);
+   //  Serial.print("testing");
+   // Serial.println(samplebuffer);
     #endif
     if (samplebuffer >= threshold1)
     {
