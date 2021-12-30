@@ -13,8 +13,8 @@
 #define PRINTS
 
 
-//#define DBMP280
-#define DBMP180
+#define DBMP280
+//#define DBMP180
 
 byte note = 0;
 int hits;
@@ -86,9 +86,8 @@ void setup() {
 	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
 	//while (1) {}
   }
-}
 #endif
-
+}
 void PrintCount(){
 #ifdef PRINTS
            count++;
