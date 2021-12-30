@@ -13,8 +13,8 @@
 #define PRINTS
 
 
-#define DBMP280
-//#define DBMP180
+//#define DBMP280
+#define DBMP180
 
 byte note = 0;
 int hits;
@@ -50,7 +50,7 @@ MPU6050 mpu6050;
 #include <SWire.h>
 
 #ifdef DBMP280
-#include "Seeed_BMP280.h"
+#include "Seeed_BMP280-swire.h"
 BMP280 bmp280;
 #endif
 
