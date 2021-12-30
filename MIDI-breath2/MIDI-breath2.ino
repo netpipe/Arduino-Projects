@@ -7,10 +7,14 @@
     #include "MIDIUSB.h"
 #endif
 
-//#define GYRO
+#define GYRO
 #define PLAY
 //#define debug1
 #define PRINTS
+
+
+#define DBMP280
+//#define DBMP180
 
 byte note = 0;
 int hits;
@@ -44,10 +48,17 @@ MPU6050 mpu6050;
 #endif
 
 #include <SWire.h>
-#include <Adafruit_BMP085-swire.h>
 
+#ifdef DBMP280
+#include "Seeed_BMP280.h"
+BMP280 bmp280;
+#endif
+
+#ifdef DBMP180
+#include <Adafruit_BMP085-swire.h>
 Adafruit_BMP085 bmp;
-  
+#endif
+
 void setup() {
     //Wire.pins(sda,slc)
 //  SWire.pins(4,5)
@@ -63,11 +74,20 @@ void setup() {
   mpu6050.calcGyroOffsets(true);
 #endif
 
+
+#ifdef DBMP280
+  if(!bmp280.init(A3,A2)){
+    Serial.println("Device error!");
+  }
+#endif
+
+#ifdef DBMP180
   if (!bmp.begin(3,A2,A3)) {
 	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
 	//while (1) {}
   }
 }
+#endif
 
 void PrintCount(){
 #ifdef PRINTS
@@ -88,8 +108,13 @@ void loop() {
     //if (digitalRead(OUT_PIN) < 1) { //microphone input
     //  samplebuffer++;
    // }
-   
+
+  #ifdef DBMP280
+   samplebuffer += bmp280.getPressure();
+   #endif
+   #ifdef DBMP180
     samplebuffer += bmp.readPressure();
+    #endif
     elapsedmilis = millis() - startMillis;
   }
 
