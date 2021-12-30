@@ -1,4 +1,4 @@
-// v2 MIDI breath controller -- with GYRO and microphone support
+// v2 MIDI GUITAR TILT controller -- with GYRO and microphone support
 
 
 // needs leonardo or something with HID support to work properly
@@ -7,6 +7,7 @@
     #include "MIDIUSB.h"
 #endif
 
+#define GYRO
 #define PLAY
 //#define debug1
 #define PRINTS
@@ -36,7 +37,7 @@ const int threshold2 = 27000;
 const int threshold3 = 28000; //rename to 4 after
 int count = 0;
 
-//#define GYRO
+
 #ifdef GYRO
 #include <MPU6050_tockn-swire.h>
 MPU6050 mpu6050;
@@ -185,6 +186,19 @@ void loop() {
  //   timer = millis();
     #endif
 //  }
+
+    float x=mpu6050.getAccAngleY();
+    int y = map(round(x), -50, 50, 0, 128);
+   // Serial.println(y);
+    note = 0x8;
+    noteOn(0xB0, note, y);
+          
+    float x2=mpu6050.getGyroAngleZ();
+    // use x2 reading to calibrate the position every so often a 1 or 2 min average possibly
+    int y2 = map(x2, -50, 50, 0, 128);
+    note = 0x9;
+    noteOn(0xB0, note, y2);
+          
 #endif
 
    // Serial.print("Temperature = ");
