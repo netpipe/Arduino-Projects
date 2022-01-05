@@ -1,4 +1,6 @@
 // v2 MIDI breath controller -- with GYRO and microphone support
+#include <PortExpander_I2C-swire.h>
+PortExpander_I2C pe(0x20,A2,A3);
 
 
 // needs leonardo or something with HID support to work properly
@@ -33,12 +35,27 @@ int addr = 0;
 #define MIDI_OFF 128
 
 int samplebuffer = 0;
+int samplebuffer2 = 0;
 
 const int sampleWindow = 28; // Sample window width in mS (50 mS = 20Hz)
+#ifdef BMP280
+const int threshold1 = 28000;    // 350 higher value for larger sample window
+const int threshold2 = 29000;
+const int threshold3 = 31000; //rename to 4 after
+//const int threshold4 = 140; 
+#else
 const int threshold1 = 26800;    // 350 higher value for larger sample window
 const int threshold2 = 27000;
-//const int threshold4 = 140; 
 const int threshold3 = 28000; //rename to 4 after
+//const int threshold4 = 140; 
+#endif
+
+// microphone
+const int mthreshold1 = 28000;    // 350 higher value for larger sample window
+const int mthreshold2 = 29000;
+const int mthreshold3 = 31000; //rename to 4 after
+
+
 int count = 0;
 
 
@@ -63,6 +80,12 @@ void setup() {
     //Wire.pins(sda,slc)
 //  SWire.pins(4,5)
   //Wire.begin(4,5);
+  pe.init();
+  
+  for( int i = 0; i < 8; i++ ){
+    pe.pinMode(i,INPUT);
+  }
+  
    #ifdef USBHID
     Serial.begin(9600);
    #else
@@ -99,24 +122,101 @@ void loop() {
    hits = 9;
    
   samplebuffer=0;
-  
+    samplebuffer2=0;
+    
     startMillis = millis(); // Start of sample window
 
   while (elapsedmilis < sampleWindow)
   {
-    //if (digitalRead(OUT_PIN) < 1) { //microphone input
-    //  samplebuffer++;
+   // if (digitalRead(OUT_PIN) < 1) { //microphone input
+   //   samplebuffer2++;
    // }
-
-  #ifdef DBMP280
-   samplebuffer += bmp280.getPressure();
-   #endif
-   #ifdef DBMP180
-    samplebuffer += bmp.readPressure();
-    #endif
+    if (pe.digitalRead(0) < 1) { //microphone input
+      samplebuffer2++;
+    }
+    
     elapsedmilis = millis() - startMillis;
 
   }
+
+
+    if (samplebuffer > 0) {
+    #ifdef PRINTS
+   //  Serial.print("testing");
+   // Serial.println(samplebuffer);
+    #endif
+    if (samplebuffer2 >= threshold1)
+    {
+      hits = 0;
+      if (samplebuffer2 >= threshold2)
+      {
+        hits = 1;
+        if (samplebuffer2 >= threshold3)
+        {
+          hits = 2;
+        }
+      }
+    }
+
+    Serial.println(hits);
+         switch (hits) {
+      case 2: {
+          //noteOn(0x90, note, 127);
+          #ifdef debug1
+          Serial.println("hit2");
+          PrintCount();
+         #endif
+         #ifdef PLAY
+          //            delay(3003);
+          note = 0x6;
+          noteOn(0xB0,note, 0x127);
+         // delay(10);
+          //noteOn(0x90, note, 0x00);
+          #endif
+          break;
+        }
+      case 1: {
+        #ifdef debug1
+          Serial.println("hit1");
+          #endif
+          PrintCount();
+         #ifdef PLAY
+         note = 0x6;
+            noteOn(0xB0, note, 0x85);
+         //   delay(10);
+         //   noteOn(0x90, note, 0x00);
+           #endif 
+          break;
+        }
+      case 0: {
+        #ifdef debug1
+            Serial.println("hit0");
+            PrintCount();
+          #endif
+         #ifdef PLAY
+          note = 0x6;
+          noteOn(0xB0, note, 0x40);
+         // delay(10);
+         // noteOn(0x90, note, 0x00);
+        #endif
+        break;
+        }  
+    }
+  }
+
+
+
+  
+   hits = 9;
+   
+    #ifdef DBMP280
+   samplebuffer = bmp280.getPressure();
+   #endif
+   #ifdef DBMP180
+    samplebuffer = bmp.readPressure();
+    #endif
+
+    
       Serial.println(samplebuffer);
    //first drum loop
   if (samplebuffer > 0) {
@@ -213,17 +313,23 @@ void loop() {
     #endif
 //  }
 
-    float x=mpu6050.getAccAngleY();
+    float x=mpu6050.getAccAngleX();
     int y = map(round(x), -50, 50, 0, 128);
+   // Serial.println(y);
+    note = 0x5;
+    noteOn(0xB0, note, y);
+
+    x=mpu6050.getAccAngleY();
+    y = map(round(x), -50, 50, 0, 128);
    // Serial.println(y);
     note = 0x8;
     noteOn(0xB0, note, y);
           
-    float x2=mpu6050.getGyroAngleZ();
+    x=mpu6050.getGyroAngleZ();
     // use x2 reading to calibrate the position every so often a 1 or 2 min average possibly
-    int y2 = map(x2, -50, 50, 0, 128);
+    y = map(x, -50, 50, 0, 128);
     note = 0x9;
-    noteOn(0xB0, note, y2);
+    noteOn(0xB0, note, y);
           
 #endif
 
