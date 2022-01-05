@@ -1,6 +1,9 @@
 // v2 MIDI breath controller -- with GYRO and microphone support
+#ifdef MICROPHONE
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x20,A2,A3);
+const int OUT_PIN = 0; // digital pin for microphone.
+#endif
 
 
 // needs leonardo or something with HID support to work properly
@@ -23,7 +26,7 @@ int hits;
 unsigned long startMillis;
 long elapsedmilis = 0;
 
-const int OUT_PIN = 3; // digital pin for microphone.
+
 
 #ifdef memory
 #include <EEPROM.h>
@@ -80,11 +83,7 @@ void setup() {
     //Wire.pins(sda,slc)
 //  SWire.pins(4,5)
   //Wire.begin(4,5);
-  pe.init();
-  
-  for( int i = 0; i < 8; i++ ){
-    pe.pinMode(i,INPUT);
-  }
+
   
    #ifdef USBHID
     Serial.begin(9600);
@@ -110,6 +109,14 @@ void setup() {
 	//while (1) {}
   }
 #endif
+
+   #ifdef MICROPHONE 
+  pe.init();
+  
+  for( int i = 0; i < 8; i++ ){
+    pe.pinMode(i,INPUT);
+  }
+  #endif
 }
 void PrintCount(){
 #ifdef PRINTS
@@ -122,8 +129,10 @@ void loop() {
    hits = 9;
    
   samplebuffer=0;
+
+     #ifdef MICROPHONE 
     samplebuffer2=0;
-    
+  
     startMillis = millis(); // Start of sample window
 
   while (elapsedmilis < sampleWindow)
@@ -131,34 +140,34 @@ void loop() {
    // if (digitalRead(OUT_PIN) < 1) { //microphone input
    //   samplebuffer2++;
    // }
-    if (pe.digitalRead(0) < 1) { //microphone input
+    if (pe.digitalRead(OUT_PIN) < 1) { //microphone input
       samplebuffer2++;
     }
     
     elapsedmilis = millis() - startMillis;
 
   }
+#endif
 
-
-    if (samplebuffer > 0) {
+    if (samplebuffer2 > 0) {
     #ifdef PRINTS
    //  Serial.print("testing");
    // Serial.println(samplebuffer);
     #endif
-    if (samplebuffer2 >= threshold1)
+    if (samplebuffer2 >= mthreshold1)
     {
       hits = 0;
-      if (samplebuffer2 >= threshold2)
+      if (samplebuffer2 >= mthreshold2)
       {
         hits = 1;
-        if (samplebuffer2 >= threshold3)
+        if (samplebuffer2 >= mthreshold3)
         {
           hits = 2;
         }
       }
     }
 
-    Serial.println(hits);
+   // Serial.println(hits);
          switch (hits) {
       case 2: {
           //noteOn(0x90, note, 127);
@@ -237,7 +246,7 @@ void loop() {
       }
     }
 
-    Serial.println(hits);
+   // Serial.println(hits);
          switch (hits) {
       case 2: {
           //noteOn(0x90, note, 127);
