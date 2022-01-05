@@ -1,4 +1,5 @@
 // v2 MIDI breath controller -- with GYRO and microphone support
+//#define MICROPHONE
 #ifdef MICROPHONE
 #include <PortExpander_I2C-swire.h>
 PortExpander_I2C pe(0x20,A2,A3);
@@ -105,8 +106,8 @@ void setup() {
 
 #ifdef DBMP180
   if (!bmp.begin(3,A2,A3)) {
-	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
-	//while (1) {}
+  Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+  //while (1) {}
   }
 #endif
 
@@ -147,7 +148,6 @@ void loop() {
     elapsedmilis = millis() - startMillis;
 
   }
-#endif
 
     if (samplebuffer2 > 0) {
     #ifdef PRINTS
@@ -172,47 +172,56 @@ void loop() {
       case 2: {
           //noteOn(0x90, note, 127);
           #ifdef debug1
-          Serial.println("hit2");
+          Serial.println("mhit2");
           PrintCount();
          #endif
          #ifdef PLAY
           //            delay(3003);
           note = 0x6;
-          noteOn(0xB0,note, 0x127);
-         // delay(10);
-          //noteOn(0x90, note, 0x00);
+          noteOn(0x90,note, 0x127);
+          delay(10);
+          noteOn(0x90, note, 0x00);
           #endif
           break;
         }
       case 1: {
         #ifdef debug1
-          Serial.println("hit1");
+          Serial.println("mhit1");
           #endif
           PrintCount();
          #ifdef PLAY
          note = 0x6;
-            noteOn(0xB0, note, 0x85);
-         //   delay(10);
-         //   noteOn(0x90, note, 0x00);
+            noteOn(0x90, note, 0x85);
+            delay(10);
+            noteOn(0x90, note, 0x00);
            #endif 
           break;
         }
       case 0: {
         #ifdef debug1
-            Serial.println("hit0");
+            Serial.println("mhit0");
             PrintCount();
           #endif
          #ifdef PLAY
           note = 0x6;
-          noteOn(0xB0, note, 0x40);
-         // delay(10);
-         // noteOn(0x90, note, 0x00);
+          noteOn(0x90, note, 0x40);
+          delay(10);
+          noteOn(0x90, note, 0x00);
         #endif
         break;
         }  
+              case 9: {
+                         #ifdef PLAY
+          note = 0x6;
+          noteOn(0x90, note, 0x40);
+          delay(10);
+          noteOn(0x90, note, 0x00);
+        #endif
+                break;
+              }
     }
   }
-
+#endif
 
 
   
@@ -289,6 +298,13 @@ void loop() {
         #endif
         break;
         }  
+              case 9: {
+                         #ifdef PLAY
+          note = 0x7;
+          noteOn(0xB0, note, 0x00);
+          #endif
+                  break;
+              }
     }
   }
 
