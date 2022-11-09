@@ -31,7 +31,7 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP("IoT --- Free WiFi"); // WiFi name
-
+WiFi.setOutputPower(0); // this sets wifi to lowest power
   // if DNSServer is started with "*" for domain name, it will reply with
   // provided IP to all DNS request
   dnsServer.start(DNS_PORT, "*", apIP);
@@ -46,4 +46,5 @@ void setup() {
 void loop() {
   dnsServer.processNextRequest();
   webServer.handleClient();
+  delay(200);
 }
