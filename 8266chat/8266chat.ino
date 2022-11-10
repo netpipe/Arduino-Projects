@@ -21,13 +21,16 @@
 #define BLURB "esp8266 chat"
 #define COMPLAINTSTO "https://github.com/netpipe/Arduino-Projects/tree/master/8266chat"
 #define INDEXTITLE "Howdy friend!"
-#define INDEXBANNER "This is a local, non-cloud chat room <a href=/faq>..</a>"
+#define INDEXBANNER "wireless chat <a href=/faq>..</a>"
 #define POSTEDTITLE "Message sent!"
 #define POSTEDBANNER "OK, you should be good to go. Your message will stay live for a short time - perhaps a couple of days at most, until the wee server is rebooted. Here it is again:"
 const String FAQ = "test chatroom<br/>";
 
+const char *password = "";
+
+
 // boring
-#define VER "R0"
+#define VER "R1"
 const byte HTTP_CODE = 200; // nyi? 511; // rfc6585
 const byte DNS_PORT = 53;  // Capture DNS requests on port 53
 const byte TICK_TIMER = 1000;
@@ -46,17 +49,21 @@ String input(String argName) {
   a.replace("<","&lt;");a.replace(">","&gt;");
   a.substring(0,200); return a; }
 String quote() { 
-  const byte nquotes=3;
+  const byte nquotes=6;
   String quotes[nquotes]={
     "Blushing is the color of virtue -Diogenes of Synope", 
     "A bear can run as fast as a horse",
     "Homo homini lupus est - man is a wolf to fellow man",
+    "When you rub it then you do it.",
+        "A bing can also be a ding.",
+            "Then and now are ways to view things.",
+            
   };
   return quotes[millis() / 1000 / 60 / 60 % nquotes];
 }
 String footer() { return 
   "</div><div class=q><label>Quote of the hour:</label>"+quote()+"</div>"
-  "<div class=com>Complaints to: " COMPLAINTSTO "</div>"
+  "<div class=com>SourceCode: " COMPLAINTSTO "</div>"
   "<div class=by>" VER "</div></body></html>"; }
 String header(String t) {
   String a = String(CHATNAME);
@@ -73,7 +80,7 @@ String header(String t) {
     "<head><meta http-equiv=\"refresh\" content=\"100\"><title>"+a+" :: "+t+"</title>"
     "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
     "<style>"+CSS+"</style></head>"
-    "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div><h1>"+t+"</h1></div><div>";
+    "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div></div><div>";
   emit("header - "+t);
   emit(h);
   return h; }
@@ -86,14 +93,14 @@ String header(String t) {
     "h1 { margin: 0.5em 0 0 0; padding: 0; }"
     "input { border-radius: 0; }"
     "label { color: #333; display: block; font-style: italic; font-weight: bold; }"
-    "nav { background: #eb3570; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
+    "nav { background: #3b3570; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
     "nav b { display: block; font-size: 1.2em; margin-bottom: 0.5em; } "
     "textarea { width: 100%; }";
   String h = "<!DOCTYPE html><html>"
     "<head><meta http-equiv=\"refresh\" content=\"10; URL=http://10.10.10.1\"/><title>"+a+" :: "+t+"</title>"
     "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
     "<style>"+CSS+"</style></head>"
-    "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div><h1>"+t+"</h1></div><div>";
+    "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div></div><div>";
   emit("header - "+t);
   emit(h);
   return h; }
@@ -102,18 +109,16 @@ String faq() {
   return header("frequently asked questions") + FAQ + footer();
 }
 String index() {
-  return header(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
-    "</ol></div><div><form action=/post method=post><label>Post new message:</label><br/>"+
-    "<i>remember:</i> include your name or something like it</i><br/>"+
+  return header(INDEXTITLE) + "<div>" + "</div><div><ol>"+allMsgs+
+    "</ol></div><div><form action=/post method=post><label>Post new message:</label>"+
     "<textarea name=m></textarea><br/><input type=submit value=send></form>" + footer();
 }
 
 String index2() {
     String msg=input("m"); allMsgs="<li>"+msg+"</li>"+allMsgs;
   emit("posted: "+msg); 
-  return header2(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
-    "</ol></div><div><form action=/post method=post><label>Post new message:</label><br/>"+
-    "<i>remember:</i> include your name or something like it</i><br/>"+
+  return header2(INDEXTITLE) + "<div>"  + "</div><div><ol>"+allMsgs+
+    "</ol></div><div><form action=/post method=post><label>Post new message:</label>"+
     "<textarea name=m></textarea><br/><input type=submit value=send></form>" + footer();
 }
 String posted() {
@@ -128,7 +133,8 @@ void setup() {
   pinMode(ACTIVITY_LED, OUTPUT); led(1);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(APIP, APIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP(CHATNAME);
+     WiFi.softAP(CHATNAME, password);
+  //WiFi.softAP(CHATNAME);
   dnsServer.start(DNS_PORT, "*", APIP);
   webServer.on("/post",[]() { webServer.send(HTTP_CODE, "text/html", index2()); });
   webServer.on("/faq",[]() { webServer.send(HTTP_CODE, "text/html", faq()); });
