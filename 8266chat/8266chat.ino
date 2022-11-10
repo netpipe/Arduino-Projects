@@ -17,17 +17,17 @@
     float t = 0.0;
     float h = 0.0;
 // config
-#define CHATNAME "Instant Anonymous Chatroom"
-#define BLURB "Experimental local area chat"
-#define COMPLAINTSTO "tlack"
+#define CHATNAME "Anonymous Chatroom"
+#define BLURB "esp8266 chat"
+#define COMPLAINTSTO "https://github.com/netpipe/Arduino-Projects/tree/master/8266chat"
 #define INDEXTITLE "Howdy friend!"
-#define INDEXBANNER "This is a local-only, non-cloud chat room <a href=/faq>See frequently asked questions..</a>"
-#define POSTEDTITLE "Message posted!"
+#define INDEXBANNER "This is a local, non-cloud chat room <a href=/faq>..</a>"
+#define POSTEDTITLE "Message sent!"
 #define POSTEDBANNER "OK, you should be good to go. Your message will stay live for a short time - perhaps a couple of days at most, until the wee server is rebooted. Here it is again:"
 const String FAQ = "test chatroom<br/>";
 
 // boring
-#define VER "@tlack/popup R0"
+#define VER "R0"
 const byte HTTP_CODE = 200; // nyi? 511; // rfc6585
 const byte DNS_PORT = 53;  // Capture DNS requests on port 53
 const byte TICK_TIMER = 1000;
@@ -66,7 +66,7 @@ String header(String t) {
     "h1 { margin: 0.5em 0 0 0; padding: 0; }"
     "input { border-radius: 0; }"
     "label { color: #333; display: block; font-style: italic; font-weight: bold; }"
-    "nav { background: #eb3570; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
+    "nav { background: #3b3570; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
     "nav b { display: block; font-size: 1.2em; margin-bottom: 0.5em; } "
     "textarea { width: 100%; }";
   String h = "<!DOCTYPE html><html>"
