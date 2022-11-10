@@ -5,7 +5,7 @@
 #include "./DNSServer.h"                  // Patched lib
 #include <ESP8266WebServer.h>
     #include <DHT.h>
-    #define DHTPIN 2     // Digital pin connected to the DHT sensor
+    #define DHTPIN 4     // Digital pin connected to the DHT sensor
      
     // Uncomment the type of sensor in use:
     #define DHTTYPE    DHT11     // DHT 11
@@ -70,7 +70,7 @@ String header(String t) {
     "nav b { display: block; font-size: 1.2em; margin-bottom: 0.5em; } "
     "textarea { width: 100%; }";
   String h = "<!DOCTYPE html><html>"
-    "<head><title>"+a+" :: "+t+"</title>"
+    "<head><meta http-equiv=\"refresh\" content=\"100\"><title>"+a+" :: "+t+"</title>"
     "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
     "<style>"+CSS+"</style></head>"
     "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div><h1>"+t+"</h1></div><div>";
@@ -81,6 +81,14 @@ String faq() {
   return header("frequently asked questions") + FAQ + footer();
 }
 String index() {
+  return header(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
+    "</ol></div><div><form action=/post method=post><label>Post new message:</label><br/>"+
+    "<i>remember:</i> include your name or something like it</i><br/>"+
+    "<textarea name=m></textarea><br/><input type=submit value=send></form>" + footer();
+}
+String index2() {
+    String msg=input("m"); allMsgs="<li>"+msg+"</li>"+allMsgs;
+  emit("posted: "+msg); 
   return header(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
     "</ol></div><div><form action=/post method=post><label>Post new message:</label><br/>"+
     "<i>remember:</i> include your name or something like it</i><br/>"+
@@ -100,7 +108,7 @@ void setup() {
   WiFi.softAPConfig(APIP, APIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(CHATNAME);
   dnsServer.start(DNS_PORT, "*", APIP);
-  webServer.on("/post",[]() { webServer.send(HTTP_CODE, "text/html", posted()); });
+  webServer.on("/post",[]() { webServer.send(HTTP_CODE, "text/html", index2()); });
   webServer.on("/faq",[]() { webServer.send(HTTP_CODE, "text/html", faq()); });
   webServer.onNotFound([]() { lastActivity=millis(); webServer.send(HTTP_CODE, "text/html", index()); });
   webServer.begin();
