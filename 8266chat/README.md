@@ -1,5 +1,5 @@
 # PopupChat 
-
+![Screenshot of PopupChat Arduino instant chat room](./s.png)
 PopupChat is an open anonymous instant chat room.
 
 ![Screenshot of PopupChat Arduino instant chat room](http://www.modernmethod.com/send/files/popupchatscreenshot.jpg)
