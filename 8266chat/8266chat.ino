@@ -60,7 +60,7 @@ String footer() { return
   "<div class=by>" VER "</div></body></html>"; }
 String header(String t) {
   String a = String(CHATNAME);
-  String CSS = "article { background: #f2f2f2; padding: 1em; }" 
+  String CSS = "article { background: #32f2f2; padding: 1em; }" 
     "body { color: #333; font-family: Century Gothic, sans-serif; font-size: 18px; line-height: 24px; margin: 0; padding: 0; }"
     "div { padding: 0.5em; }"
     "h1 { margin: 0.5em 0 0 0; padding: 0; }"
@@ -77,6 +77,27 @@ String header(String t) {
   emit("header - "+t);
   emit(h);
   return h; }
+
+  String header2(String t) {
+  String a = String(CHATNAME);
+  String CSS = "article { background: #f2f2f2; padding: 1em; }" 
+    "body { color: #333; font-family: Century Gothic, sans-serif; font-size: 18px; line-height: 24px; margin: 0; padding: 0; }"
+    "div { padding: 0.5em; }"
+    "h1 { margin: 0.5em 0 0 0; padding: 0; }"
+    "input { border-radius: 0; }"
+    "label { color: #333; display: block; font-style: italic; font-weight: bold; }"
+    "nav { background: #eb3570; color: #fff; display: block; font-size: 1.3em; padding: 1em; }"
+    "nav b { display: block; font-size: 1.2em; margin-bottom: 0.5em; } "
+    "textarea { width: 100%; }";
+  String h = "<!DOCTYPE html><html>"
+    "<head><meta http-equiv=\"refresh\" content=\"10; URL=http://10.10.10.1\"/><title>"+a+" :: "+t+"</title>"
+    "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
+    "<style>"+CSS+"</style></head>"
+    "<body><nav><b>"+a+"</b> "+BLURB+"</nav><div><h1>"+t+"</h1></div><div>";
+  emit("header - "+t);
+  emit(h);
+  return h; }
+    
 String faq() {
   return header("frequently asked questions") + FAQ + footer();
 }
@@ -86,10 +107,11 @@ String index() {
     "<i>remember:</i> include your name or something like it</i><br/>"+
     "<textarea name=m></textarea><br/><input type=submit value=send></form>" + footer();
 }
+
 String index2() {
     String msg=input("m"); allMsgs="<li>"+msg+"</li>"+allMsgs;
   emit("posted: "+msg); 
-  return header(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
+  return header2(INDEXTITLE) + "<div>" + INDEXBANNER + "</div><div><label>Last few messages:</label><ol>"+allMsgs+
     "</ol></div><div><form action=/post method=post><label>Post new message:</label><br/>"+
     "<i>remember:</i> include your name or something like it</i><br/>"+
     "<textarea name=m></textarea><br/><input type=submit value=send></form>" + footer();
