@@ -1,10 +1,22 @@
-// PopupChat - a one-screen system to share things locally with your friends via WIFI
-// based on: Captive Portal by: M. Ray Burnette 20150831
-// homo est bulae
-#include <ESP8266WiFi.h>
-#include "./DNSServer.h"                  // Patched lib
-#include <ESP8266WebServer.h>
+/*
+    This sketch establishes a TCP connection to a "quote of the day" service.
+    It sends a "hello" message, and then prints received data.
+*/
 #include <EEPROM.h>
+#include <ESP8266WiFi.h>
+
+#ifndef STASSID
+#define STASSID "BARN"
+#define STAPSK  "redbarn63"
+#endif
+
+const char* ssid     = STASSID;
+const char* password = STAPSK;
+
+const char* host = "localtest.net";
+const uint16_t port = 17;
+
+
 
 struct TimeVar {
   byte hour;
@@ -56,7 +68,6 @@ float newT,newH = 0;
 #define POSTEDBANNER "OK, you should be good to go. Your message will stay live for a short time - perhaps a couple of days at most, until the wee server is rebooted. Here it is again:"
 const String FAQ = "test chatroom<br/>";
 
-const char *password = "";
 
 
 // boring
@@ -71,11 +82,10 @@ IPAddress APIP(10, 10, 10, 1);    // Private network for server
 // state:
 String allMsgs="<i>initialized</i>";
 unsigned long bootTime=0, lastActivity=0, lastTick=0, tickCtr=0; // timers
-DNSServer dnsServer; ESP8266WebServer webServer(80); // standard api servers
 void em(String s){ Serial.print(s); } 
 void emit(String s){ Serial.println(s); } // debugging
 String input(String argName) {
-  String a=webServer.arg(argName);
+  String a=argName;
   a.replace("<","&lt;");a.replace(">","&gt;");
   a.substring(0,200); return a; }
 String quote() { 
@@ -158,34 +168,34 @@ String posted() {
   emit("posted: "+msg); 
   return header(POSTEDTITLE) + POSTEDBANNER + "<article>"+msg+"</article><a href=/>Back to index</a>" + footer();
 }
+
+
+
 void setup() {
-  Serial.begin(115200); 
-  emit("setup"); 
-   pinMode(5, OUTPUT); 
+  Serial.begin(115200);
+
+  // We start by connecting to a WiFi network
+
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
   bootTime = lastActivity = millis();
-  pinMode(ACTIVITY_LED, OUTPUT); led(1);
-  WiFi.mode(WIFI_AP);
-  WiFi.softAPConfig(APIP, APIP, IPAddress(255, 255, 255, 0));
-     WiFi.softAP(CHATNAME, password);
-  //WiFi.softAP(CHATNAME);
-  dnsServer.start(DNS_PORT, "*", APIP);
-  webServer.on("/post",[]() { webServer.send(HTTP_CODE, "text/html", index2()); });
-  webServer.on("/faq",[]() { webServer.send(HTTP_CODE, "text/html", faq()); });
-  webServer.onNotFound([]() { lastActivity=millis(); webServer.send(HTTP_CODE, "text/html", index()); });
-  webServer.begin();
-  WiFi.setOutputPower(0.2);
-}
-void led(byte p){
-  byte on=p^ACTIVITY_REVERSE; emit("led"+String(on));
-  digitalWrite(ACTIVITY_LED, on ? HIGH : LOW);
-}
-void tick() {
-  String tickCs=String(tickCtr++); // emit("tick #"+tickCs+" @"+String(millis()));
-  if ((millis() - lastActivity) < ACTIVITY_DURATION) {
-    em("+"); led(1);
-  } else {
-    em("-"); lastActivity = 0; led(0);
+  /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
+     would try to act as both a client and an access-point and could cause
+     network-issues with your other WiFi-devices on your WiFi-network. */
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
   }
+  WiFi.setOutputPower(0.2);
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 
@@ -193,11 +203,48 @@ void tick() {
      
     // Updates DHT readings every 10 seconds
     const long interval = 10000;
-void loop() { 
-  if ((millis()-lastTick)>TICK_TIMER) {lastTick=millis(); tick();} 
-  dnsServer.processNextRequest(); webServer.handleClient();
-  
-  
+
+
+void loop() {
+  static bool wait = false;
+
+  Serial.print("connecting to ");
+  Serial.print(host);
+  Serial.print(':');
+  Serial.println(port);
+
+  // Use WiFiClient class to create TCP connections
+  WiFiClient client;
+  if (!client.connect(host, port)) {
+    Serial.println("connection failed");
+    delay(5000);
+    return;
+  }
+
+  // This will send a string to the server
+  Serial.println("sending data to server");
+  if (client.connected()) {
+    client.println("hello from ESP8266");
+  }
+
+  // wait for data to be available
+  unsigned long timeout = millis();
+  while (client.available() == 0) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client.stop();
+      delay(60000);
+      return;
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  Serial.println("receiving from remote server");
+  // not testing 'client.connected()' since we do not need to send data here
+  while (client.available()) {
+    char ch = static_cast<char>(client.read());
+    Serial.print(ch);
+
         unsigned long currentMillis = millis();
       if (currentMillis - previousMillis >= interval) {
         // save the last time you updated the DHT values
@@ -287,9 +334,15 @@ count++;
     }
   
   }
-
-      
         delay(200);
-        
-         }
-  
+  }
+  // Close the connection
+  Serial.println();
+  Serial.println("closing connection");
+  client.stop();
+
+  if (wait) {
+    delay(300000); // execute once every 5 minutes, don't flood remote service
+  }
+  wait = true;
+}
