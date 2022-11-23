@@ -185,7 +185,7 @@ String posted() {
   return header(POSTEDTITLE) + POSTEDBANNER + "<article>" + msg + "</article><a href=/>Back to index</a>" + footer();
 }
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   emit("setup");
   pinMode(5, OUTPUT);
   bootTime = lastActivity = millis();
