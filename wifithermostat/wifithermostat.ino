@@ -180,7 +180,14 @@ String index2() {
 }
 String posted() {
   String msg = input("m");
-  allMsgs = "<li>" + msg + "</li>" + allMsgs;
+  allMsgs = "<li>" + msg + "</li>" + allMsgs; //limit string length
+
+  //  std::string str ("Test string");
+  //std::cout << "size: " << str.size() << "\n";
+ // std::cout << "length: " << str.length() << "\n";
+ // std::cout << "capacity: " << str.capacity() << "\n";
+ // std::cout << "max_size: " << str.max_size() << "\n";
+
   emit("posted: " + msg);
   return header(POSTEDTITLE) + POSTEDBANNER + "<article>" + msg + "</article><a href=/>Back to index</a>" + footer();
 }
